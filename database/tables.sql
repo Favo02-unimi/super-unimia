@@ -1,6 +1,5 @@
 SET search_path TO unimia;
 
-DROP TABLE utenti CASCADE;
 CREATE TABLE utenti (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   password TEXT NOT NULL,
