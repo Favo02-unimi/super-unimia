@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION genera_mail_func()
     DECLARE _num INTEGER;
     BEGIN
 
+      SET search_path TO unimia;
+
       SELECT count(*) INTO _num
       FROM utenti AS u
       WHERE u.email LIKE CONCAT(NEW.nome, '.', NEW.cognome, '%');
