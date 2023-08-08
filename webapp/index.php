@@ -18,7 +18,7 @@
 
   ?>
 
-  <div class="container is-max-desktop mt-6">
+  <div class="container is-max-desktop">
 
     <form class="box p-6" action="scripts/login.php" method="post">
 
