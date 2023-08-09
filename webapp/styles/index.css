@@ -11,6 +11,6 @@ body {
 .c-navbar {
   position: fixed;
   top: 20px;
-  border-radius: 20px;
+  border-radius: 6px;
   width: 90%;
 }
