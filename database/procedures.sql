@@ -17,9 +17,8 @@ CREATE OR REPLACE PROCEDURE new_studente (
       VALUES (_password, _nome, _cognome, 'studente')
       RETURNING id INTO _id;
 
-      -- TODO: insert into studente
-      -- INSERT INTO studenti(id, matricola)
-      -- VALUES (_id, '000002');
+      INSERT INTO studenti(id)
+      VALUES (_id);
       
     END;
   $$;
