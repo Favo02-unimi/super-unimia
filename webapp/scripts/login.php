@@ -22,6 +22,7 @@ if (is_null($row["__id"])) {
 
 $_SESSION["userid"] = $row["__id"];
 $_SESSION["usertype"] = $row["__type"];
+$_SESSION["username"] = ucfirst(explode(".", $_POST["email"])[0]);
 
 require("redirector.php");
 
