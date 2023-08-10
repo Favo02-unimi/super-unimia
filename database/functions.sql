@@ -28,6 +28,7 @@ CREATE OR REPLACE FUNCTION login (
 -- restituisce tutti gli studenti disponibili
 CREATE OR REPLACE FUNCTION get_studenti ()
   RETURNS TABLE (
+    __id uuid,
     __nome TEXT,
     __cognome TEXT,
     __email TEXT,
@@ -40,7 +41,7 @@ CREATE OR REPLACE FUNCTION get_studenti ()
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT u.nome, u.cognome, u.email, s.matricola
+        SELECT u.id, u.nome, u.cognome, u.email, s.matricola
         FROM studenti AS s
         INNER JOIN utenti AS u ON u.id = s.id;
 
@@ -50,6 +51,7 @@ CREATE OR REPLACE FUNCTION get_studenti ()
 -- restituisce tutti i docenti disponibili
 CREATE OR REPLACE FUNCTION get_docenti ()
   RETURNS TABLE (
+    __id uuid,
     __nome TEXT,
     __cognome TEXT,
     __email TEXT
@@ -61,7 +63,7 @@ CREATE OR REPLACE FUNCTION get_docenti ()
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT u.nome, u.cognome, u.email
+        SELECT u.id, u.nome, u.cognome, u.email
         FROM docenti AS d
         INNER JOIN utenti AS u ON u.id = d.id;
 
@@ -71,6 +73,7 @@ CREATE OR REPLACE FUNCTION get_docenti ()
 -- restituisce tutti i segretari disponibili
 CREATE OR REPLACE FUNCTION get_segretari ()
   RETURNS TABLE (
+    __id uuid,
     __nome TEXT,
     __cognome TEXT,
     __email TEXT
@@ -82,7 +85,7 @@ CREATE OR REPLACE FUNCTION get_segretari ()
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT u.nome, u.cognome, u.email
+        SELECT u.id, u.nome, u.cognome, u.email
         FROM segretari AS s
         INNER JOIN utenti AS u ON u.id = s.id;
 
