@@ -81,6 +81,7 @@
             <i class="fa-solid fa-lock"></i>
           </span>
         </p>
+        <p class="help">Lunghezza minima 8 caratteri.</p>
       </div>
 
       <div class="icon-text mt-5">
