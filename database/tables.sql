@@ -2,7 +2,7 @@ SET search_path TO unimia;
 
 CREATE TABLE utenti (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  password TEXT NOT NULL,
+  password TEXT NOT NULL CHECK (password ~ '^.{8,}$'),
   nome TEXT NOT NULL CHECK (nome ~* '^.+$'),
   cognome TEXT NOT NULL CHECK (cognome ~* '^.+$'),
   tipo TIPO_UTENTE NOT NULL,
