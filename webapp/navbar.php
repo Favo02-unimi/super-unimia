@@ -9,9 +9,13 @@
 
   <div class="navbar-menu">
     <div class="navbar-start ml-4">
-      <a class="navbar-item" href="">Home</a>
-      <a class="navbar-item" href="">Home</a>
-      <a class="navbar-item" href="">Home</a>
+      <a class="navbar-item" href="home.php">Home</a>
+    </div>
+    <div class="navbar-start ml-4">
+      <p class="navbar-item">
+        Autenticato come <?php echo $_SESSION["usertype"]?>:
+        <strong>&nbsp;<?php echo $_SESSION["username"]?></strong>
+      </p>
     </div>
 
     <div class="navbar-end">

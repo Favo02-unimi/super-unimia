@@ -17,7 +17,7 @@
   $CUR_PAGE = "studente";
   require("../scripts/redirector.php");
 
-  require("navbar.php");
+  require("../navbar.php");
 
   ?>
 
