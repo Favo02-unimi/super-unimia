@@ -12,4 +12,11 @@ function Redirect($url, $permanent = false) {
   exit();
 }
 
+function ParseError($error) {
+  $startPos = strpos($error, "ERROR:");
+  $endPos = strpos($error, "DETAIL:");
+  
+  return substr($error, $startPos + 7, $endPos - $startPos - 8);
+}
+
 ?>
