@@ -161,3 +161,46 @@ CREATE OR REPLACE PROCEDURE new_segretario (
       
     END;
   $$;
+
+-- modifica un segretario dato il suo id
+-- non vengono aggiornati i campi lasciati a NULL (coalesce)
+CREATE OR REPLACE PROCEDURE edit_segretario (
+  _id uuid,
+  _nome TEXT,
+  _cognome TEXT,
+  _email TEXT
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      UPDATE utenti SET
+        nome = COALESCE(NULLIF(_nome, ''), nome),
+        cognome = COALESCE(NULLIF(_cognome, ''), cognome),
+        email = COALESCE(NULLIF(_email, ''), email)
+      WHERE id = _id;
+
+    END;
+  $$;
+
+-- elimina un segretario dato il suo id
+-- l'utente non viene cancellato in caso siano presenti foreing key
+CREATE OR REPLACE PROCEDURE delete_segretario (
+  _id uuid
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      DELETE FROM segretari
+      WHERE id = _id;
+
+      DELETE FROM utenti
+      WHERE id = _id;
+
+    END;
+  $$;
