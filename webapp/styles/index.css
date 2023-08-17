@@ -14,3 +14,7 @@ body {
   border-radius: 6px;
   width: 90%;
 }
+
+.icon-text {
+  flex-wrap: nowrap;
+}
