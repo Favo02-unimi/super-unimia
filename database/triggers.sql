@@ -12,12 +12,12 @@ CREATE OR REPLACE FUNCTION genera_mail_func()
 
       SELECT count(*) INTO _num
       FROM utenti AS u
-      WHERE u.email LIKE CONCAT(NEW.nome, '.', NEW.cognome, '%');
+      WHERE u.email LIKE CONCAT(LOWER(NEW.nome), '.', LOWER(NEW.cognome), '%');
 
       IF _num = 0 THEN
-        NEW.email := CONCAT(NEW.nome, '.', NEW.cognome, '@', NEW.tipo, '.superuni.it');
+        NEW.email := CONCAT(LOWER(NEW.nome), '.', LOWER(NEW.cognome), '@', NEW.tipo, '.superuni.it');
       ELSE
-        NEW.email := CONCAT(NEW.nome, '.', NEW.cognome, _num, '@', NEW.tipo, '.superuni.it');
+        NEW.email := CONCAT(LOWER(NEW.nome), '.', LOWER(NEW.cognome), _num, '@', NEW.tipo, '.superuni.it');
       END if;
 
       RETURN NEW;
