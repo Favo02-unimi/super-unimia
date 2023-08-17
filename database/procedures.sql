@@ -14,7 +14,7 @@ CREATE OR REPLACE PROCEDURE new_studente (
       SET search_path TO unimia;
 
       INSERT INTO utenti(password, nome, cognome, tipo)
-      VALUES (_password, _nome, _cognome, 'studente')
+      VALUES (_password, INITCAP(_nome), INITCAP(_cognome), 'studente')
       RETURNING id INTO _id;
 
       INSERT INTO studenti(id)
@@ -39,9 +39,9 @@ CREATE OR REPLACE PROCEDURE edit_studente (
       SET search_path TO unimia;
 
       UPDATE utenti SET
-        nome = COALESCE(NULLIF(_nome, ''), nome),
-        cognome = COALESCE(NULLIF(_cognome, ''), cognome),
-        email = COALESCE(NULLIF(_email, ''), email)
+        nome = INITCAP(COALESCE(NULLIF(_nome, ''), nome)),
+        cognome = INITCAP(COALESCE(NULLIF(_cognome, ''), cognome)),
+        email = LOWER(COALESCE(NULLIF(_email, ''), email))
       WHERE id = _id;
 
       UPDATE studenti SET
@@ -85,10 +85,9 @@ CREATE OR REPLACE PROCEDURE new_docente (
       SET search_path TO unimia;
 
       INSERT INTO utenti(password, nome, cognome, tipo)
-      VALUES (_password, _nome, _cognome, 'docente')
+      VALUES (_password, INITCAP(_nome), INITCAP(_cognome), 'docente')
       RETURNING id INTO _id;
 
-      -- TODO: insert into docente
       INSERT INTO docenti(id)
       VALUES (_id);
       
@@ -110,9 +109,9 @@ CREATE OR REPLACE PROCEDURE edit_docente (
       SET search_path TO unimia;
 
       UPDATE utenti SET
-        nome = COALESCE(NULLIF(_nome, ''), nome),
-        cognome = COALESCE(NULLIF(_cognome, ''), cognome),
-        email = COALESCE(NULLIF(_email, ''), email)
+        nome = INITCAP(COALESCE(NULLIF(_nome, ''), nome)),
+        cognome = INITCAP(COALESCE(NULLIF(_cognome, ''), cognome)),
+        email = LOWER(COALESCE(NULLIF(_email, ''), email))
       WHERE id = _id;
 
     END;
@@ -152,10 +151,9 @@ CREATE OR REPLACE PROCEDURE new_segretario (
       SET search_path TO unimia;
 
       INSERT INTO utenti(password, nome, cognome, tipo)
-      VALUES (_password, _nome, _cognome, 'segretario')
+      VALUES (_password, INITCAP(_nome), INITCAP(_cognome), 'segretario')
       RETURNING id INTO _id;
 
-      -- TODO: insert into docente
       INSERT INTO segretari(id)
       VALUES (_id);
       
@@ -177,9 +175,9 @@ CREATE OR REPLACE PROCEDURE edit_segretario (
       SET search_path TO unimia;
 
       UPDATE utenti SET
-        nome = COALESCE(NULLIF(_nome, ''), nome),
-        cognome = COALESCE(NULLIF(_cognome, ''), cognome),
-        email = COALESCE(NULLIF(_email, ''), email)
+        nome = INITCAP(COALESCE(NULLIF(_nome, ''), nome)),
+        cognome = INITCAP(COALESCE(NULLIF(_cognome, ''), cognome)),
+        email = LOWER(COALESCE(NULLIF(_email, ''), email))
       WHERE id = _id;
 
     END;
