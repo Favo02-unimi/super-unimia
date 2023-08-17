@@ -70,3 +70,31 @@ CREATE OR REPLACE PROCEDURE new_segretario (
       
     END;
   $$;
+
+-- modifica uno studente dato il suo id
+-- non vengono aggiornati i campi lasciati a NULL (coalesce)
+CREATE OR REPLACE PROCEDURE edit_studente (
+  _id uuid,
+  _nome TEXT,
+  _cognome TEXT,
+  _email TEXT,
+  _matricola CHAR(6)
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      UPDATE utenti SET
+        nome = COALESCE(NULLIF(_nome, ''), nome),
+        cognome = COALESCE(NULLIF(_cognome, ''), cognome),
+        email = COALESCE(NULLIF(_email, ''), email)
+      WHERE id = _id;
+
+      UPDATE studenti SET
+        matricola = COALESCE(NULLIF(_matricola, ''), matricola)
+      WHERE id = _id;
+
+    END;
+  $$;
