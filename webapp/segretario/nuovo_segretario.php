@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="../styles/index.css">
   <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Nuovo docente - SuperUnimia</title>
+  <title>Nuovo segretario - SuperUnimia</title>
 </head>
 <body class="has-background-dark has-text-light">
 
@@ -26,7 +26,7 @@
     <?php
 
       if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.new_docente($1, $2, $3);";
+        $qry = "CALL unimia.new_segretario($1, $2, $3);";
         $res = pg_prepare($con, "", $qry);
         $res = pg_execute($con, "", array($_POST["nome"], $_POST["cognome"], $_POST["password"]));
 
@@ -36,7 +36,7 @@
             <?php echo ParseError(pg_last_error()); ?>.
           </div>
         <?php else: 
-          $_SESSION["feedback"] = "Docente creato con successo.";
+          $_SESSION["feedback"] = "Segretario creato con successo.";
           Redirect("home.php");
         endif;
       }
@@ -46,9 +46,9 @@
 
       <span class="icon-text">
         <span class="icon is-large">
-          <i class="fa-solid fa-user-tie fa-2xl"></i>
+          <i class="fa-solid fa-user-gear fa-2xl"></i>
         </span>
-        <h1 class="title mt-2">Nuovo docente</h1>
+        <h1 class="title mt-2">Nuovo segretario</h1>
       </span>
 
       <label class="label mt-5">Nome</label>
