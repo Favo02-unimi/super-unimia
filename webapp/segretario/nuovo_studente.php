@@ -35,12 +35,10 @@
             <strong>Errore durante la creazione:</strong>
             <?php echo ParseError(pg_last_error()); ?>.
           </div>
-        <?php else: ?>
-          <div class="notification is-success is-light mt-6">
-            <strong>Studente creato con successo.</strong>
-            <a href="home.php">Torna alla home.</a>
-          </div>
-        <?php endif;
+        <?php else: 
+          $_SESSION["feedback"] = "Studente creato con successo.";
+          Redirect("home.php");
+        endif;
       }
     ?>
     
