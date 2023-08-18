@@ -29,7 +29,7 @@
           <th class="has-text-centered">Nome</th>
           <th class="has-text-centered">Cognome</th>
           <th class="has-text-centered">Email</th>
-          <th class="has-text-centered" colspan="2">Controlli</th>
+          <th class="has-text-centered" colspan="3">Controlli</th>
         </tr>
       </thead>
       
@@ -54,6 +54,12 @@
                 <input type="hidden" name="cognome" value="<?php echo $row["__cognome"] ?>">
                 <input type="hidden" name="email" value="<?php echo $row["__email"] ?>">
                 <button class="button is-link is-small">Modifica</button>
+              </form>
+            </td>
+            <td>
+              <form method="post" action="modifica_password.php">
+                <input type="hidden" name="email" value="<?php echo $row["__email"] ?>">
+                <button class="button is-link is-small">Modifica password</button>
               </form>
             </td>
             <td>

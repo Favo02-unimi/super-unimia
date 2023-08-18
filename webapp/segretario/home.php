@@ -34,6 +34,12 @@
       <p class="subtitle is-4">Servizi accessibili come <?php echo $_SESSION["usertype"]; ?>:</p>
     </div>
 
+    <a href="modifica_password.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-lock fa-xl"></i></span>
+      <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
+      <strong>Modifica password ad un utente</strong>
+    </a>
+
     <a href="nuovo_studente.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-graduate fa-xl"></i></span>
       <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
