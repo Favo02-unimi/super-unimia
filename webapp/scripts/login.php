@@ -17,6 +17,7 @@ $res = pg_execute($con, "", array($email, $password));
 $row = pg_fetch_assoc($res);
 
 if (is_null($row["__id"])) {
+  $_SESSION["feedback"] = "Email o password errati.";
   Redirect("../index.php");
 }
 

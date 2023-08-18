@@ -20,6 +20,12 @@
 
   <div class="container is-max-desktop">
 
+    <?php if (isset($_SESSION["feedback"])): ?>
+      <div class="notification is-danger is-light mt-6">
+        <strong><?php echo $_SESSION["feedback"]; unset($_SESSION["feedback"]) ?></strong>
+      </div>
+    <?php endif; ?>
+
     <form class="box p-6" action="scripts/login.php" method="post">
 
       <span class="icon-text">
