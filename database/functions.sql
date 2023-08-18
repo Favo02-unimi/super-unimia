@@ -20,7 +20,8 @@ CREATE OR REPLACE FUNCTION login (
         SELECT u.id, u.tipo
         FROM utenti AS u
         WHERE u.email = _email
-        AND u.password = _password;
+        AND u.password is NOT NULL 
+        AND u.password = crypt(_password, u.password);
 
     END;
   $$;

@@ -14,7 +14,7 @@ CREATE OR REPLACE PROCEDURE new_studente (
       SET search_path TO unimia;
 
       INSERT INTO utenti(password, nome, cognome, tipo)
-      VALUES (_password, INITCAP(_nome), INITCAP(_cognome), 'studente')
+      VALUES (crypt(_password, gen_salt('bf')), INITCAP(_nome), INITCAP(_cognome), 'studente')
       RETURNING id INTO _id;
 
       INSERT INTO studenti(id)
@@ -85,7 +85,7 @@ CREATE OR REPLACE PROCEDURE new_docente (
       SET search_path TO unimia;
 
       INSERT INTO utenti(password, nome, cognome, tipo)
-      VALUES (_password, INITCAP(_nome), INITCAP(_cognome), 'docente')
+      VALUES (crypt(_password, gen_salt('bf')), INITCAP(_nome), INITCAP(_cognome), 'docente')
       RETURNING id INTO _id;
 
       INSERT INTO docenti(id)
@@ -151,7 +151,7 @@ CREATE OR REPLACE PROCEDURE new_segretario (
       SET search_path TO unimia;
 
       INSERT INTO utenti(password, nome, cognome, tipo)
-      VALUES (_password, INITCAP(_nome), INITCAP(_cognome), 'segretario')
+      VALUES (crypt(_password, gen_salt('bf')), INITCAP(_nome), INITCAP(_cognome), 'segretario')
       RETURNING id INTO _id;
 
       INSERT INTO segretari(id)
