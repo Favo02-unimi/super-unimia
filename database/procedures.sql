@@ -202,3 +202,21 @@ CREATE OR REPLACE PROCEDURE delete_segretario (
 
     END;
   $$;
+
+-- modifica la password di un utente
+CREATE OR REPLACE PROCEDURE edit_user_password (
+  _email TEXT,
+  _password TEXT
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      UPDATE utenti SET
+        password = crypt(_password, gen_salt('bf'))
+      WHERE email = LOWER(_email);
+
+    END;
+  $$;
