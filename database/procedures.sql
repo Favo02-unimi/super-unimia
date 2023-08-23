@@ -240,6 +240,31 @@ CREATE OR REPLACE PROCEDURE new_corso_di_laurea (
     END;
   $$;
 
+-- modifica un corso di laurea dato il suo codice
+-- non vengono aggiornati i campi lasciati a NULL (coalesce)
+CREATE OR REPLACE PROCEDURE edit_corso_di_laurea (
+  _codice VARCHAR(6),
+  _new_codice VARCHAR(6),
+  _tipo TIPO_LAUREA,
+  _nome TEXT,
+  _descrizione TEXT
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      UPDATE corsi_di_laurea SET
+        codice = COALESCE(NULLIF(_new_codice, ''), codice),
+        tipo = _tipo,
+        nome = COALESCE(NULLIF(_nome, ''), nome),
+        descrizione = COALESCE(NULLIF(_descrizione, ''), descrizione)
+      WHERE codice = _codice;
+
+    END;
+  $$;
+
 -- elimina un corso di laurea dato il suo codice
 -- il cdl non viene cancellato in caso siano presenti foreing key
 CREATE OR REPLACE PROCEDURE delete_corso_di_laurea (
