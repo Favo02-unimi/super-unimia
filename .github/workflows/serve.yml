@@ -1,0 +1,22 @@
+name: serve
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  serve:
+    name: Serve
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        command_timeout: 20m
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.KEY }}
+        script: |
+          ${{ secrets.SCRIPT }}
