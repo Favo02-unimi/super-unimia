@@ -10,14 +10,14 @@ CREATE TABLE utenti (
 );
 
 CREATE TABLE studenti (
-  id uuid REFERENCES utenti(id),
+  id uuid NOT NULL REFERENCES utenti(id),
   matricola CHAR(6) NOT NULL UNIQUE CHECK (matricola ~* '^\d{6}$')
 );
 
 CREATE TABLE docenti (
-  id uuid REFERENCES utenti(id)
+  id uuid NOT NULL REFERENCES utenti(id)
 );
 
 CREATE TABLE segretari (
-  id uuid REFERENCES utenti(id)
+  id uuid NOT NULL REFERENCES utenti(id)
 );
