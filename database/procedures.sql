@@ -220,3 +220,22 @@ CREATE OR REPLACE PROCEDURE edit_user_password (
 
     END;
   $$;
+
+-- crea un nuovo corso di laurea
+CREATE OR REPLACE PROCEDURE new_corso_di_laurea (
+  _codice TEXT,
+  _tipo TIPO_LAUREA,
+  _nome TEXT,
+  _descrizione TEXT
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      INSERT INTO corsi_di_laurea(codice, tipo, nome, descrizione)
+      VALUES (_codice, _tipo, _nome, _descrizione);
+
+    END;
+  $$;
