@@ -21,3 +21,10 @@ CREATE TABLE docenti (
 CREATE TABLE segretari (
   id uuid NOT NULL REFERENCES utenti(id)
 );
+
+CREATE TABLE corsi_di_laurea (
+  codice VARCHAR(6) PRIMARY KEY,
+  tipo TIPO_LAUREA NOT NULL,
+  nome TEXT NOT NULL,
+  descrizione TEXT NOT NULL
+);
