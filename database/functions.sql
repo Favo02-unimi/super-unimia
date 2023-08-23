@@ -92,3 +92,24 @@ CREATE OR REPLACE FUNCTION get_segretari ()
 
     END;
   $$;
+
+-- restituisce tutti i corsi di laurea
+CREATE OR REPLACE FUNCTION get_corsi_di_laurea ()
+  RETURNS TABLE (
+    __codice VARCHAR(6),
+    __tipo TIPO_LAUREA,
+    __nome TEXT,
+    __descrizione TEXT
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT c.codice, c.tipo, c.nome, c.descrizione
+        FROM corsi_di_laurea AS c;
+
+    END;
+  $$;
