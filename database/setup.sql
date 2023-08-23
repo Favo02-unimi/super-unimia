@@ -8,3 +8,5 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- tipi di utenti possibili nel database
 CREATE TYPE TIPO_UTENTE AS ENUM ('studente', 'docente', 'segretario');
+
+CREATE TYPE TIPO_LAUREA AS ENUM ('Triennale', 'Magistrale', 'Magistrale a ciclo unico');
