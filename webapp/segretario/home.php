@@ -40,46 +40,31 @@
       <strong>Modifica password ad un utente</strong>
     </a>
 
-    <a href="nuovo_studente.php" class="block button is-link is-outlined is-fullwidth">
-      <span class="icon is-small"><i class="fa-solid fa-user-graduate fa-xl"></i></span>
-      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
-      <strong>Creazione studenti</strong>
-    </a>
-
     <a href="gestione_studenti.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-graduate fa-xl"></i></span>
+      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-list"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
-      <strong>Gestione studenti (Lista, Modifica, Cancellazione)</strong>
-    </a>
-
-    <a href="nuovo_docente.php" class="block button is-link is-outlined is-fullwidth">
-      <span class="icon is-small"><i class="fa-solid fa-user-tie fa-xl"></i></span>
-      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
-      <strong>Creazione docenti</strong>
+      <strong>Gestione studenti</strong>
     </a>
 
     <a href="gestione_docenti.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-tie fa-xl"></i></span>
+      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-list"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
-      <strong>Gestione docenti (Lista, Modifica, Cancellazione)</strong>
-    </a>
-
-    <a href="nuovo_segretario.php" class="block button is-link is-outlined is-fullwidth">
-      <span class="icon is-small"><i class="fa-solid fa-user-gear fa-xl"></i></span>
-      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
-      <strong>Creazione segretari</strong>
+      <strong>Gestione docenti</strong>
     </a>
 
     <a href="gestione_segretari.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-gear fa-xl"></i></span>
+      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-list"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
       <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
-      <strong>Gestione segretari (Lista, Modifica, Cancellazione)</strong>
+      <strong>Gestione segretari</strong>
     </a>
     
   </div>

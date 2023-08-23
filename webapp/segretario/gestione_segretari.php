@@ -23,6 +23,12 @@
 
   <div class="container is-max-desktop box">
 
+    <a href="nuovo_segretario.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-user-gear fa-xl"></i></span>
+      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
+      <strong>Crea nuovo segretario</strong>
+    </a>
+
     <table class="table is-fullwidth is-hoverable has-text-centered">
       <thead>
         <tr>
