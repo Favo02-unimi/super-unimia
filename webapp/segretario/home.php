@@ -66,7 +66,16 @@
       <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
       <strong>Gestione segretari</strong>
     </a>
-    
+
+    <a href="gestione_corsi_di_laurea.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-graduation-cap fa-xl"></i></span>
+      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
+      <span class="icon is-small"><i class="fa-solid fa-list"></i></span>
+      <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
+      <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
+      <strong>Gestione corsi di laurea</strong>
+    </a>
+
   </div>
     
 </body>
