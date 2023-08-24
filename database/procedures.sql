@@ -4,7 +4,8 @@ SET search_path TO unimia;
 CREATE OR REPLACE PROCEDURE new_studente (
   _nome TEXT,
   _cognome TEXT,
-  _password TEXT
+  _password TEXT,
+  _corso_di_laurea VARCHAR(6)
 )
   LANGUAGE plpgsql
   AS $$
@@ -17,8 +18,8 @@ CREATE OR REPLACE PROCEDURE new_studente (
       VALUES (crypt(_password, gen_salt('bf')), INITCAP(_nome), INITCAP(_cognome), 'studente')
       RETURNING id INTO _id;
 
-      INSERT INTO studenti(id)
-      VALUES (_id);
+      INSERT INTO studenti(id, corso_di_laurea)
+      VALUES (_id, _corso_di_laurea);
       
     END;
   $$;
@@ -30,7 +31,8 @@ CREATE OR REPLACE PROCEDURE edit_studente (
   _nome TEXT,
   _cognome TEXT,
   _email TEXT,
-  _matricola CHAR(6)
+  _matricola CHAR(6),
+  _corso_di_laurea VARCHAR(6)
 )
   LANGUAGE plpgsql
   AS $$
@@ -45,7 +47,8 @@ CREATE OR REPLACE PROCEDURE edit_studente (
       WHERE id = _id;
 
       UPDATE studenti SET
-        matricola = COALESCE(NULLIF(_matricola, ''), matricola)
+        matricola = COALESCE(NULLIF(_matricola, ''), matricola),
+        corso_di_laurea = _corso_di_laurea
       WHERE id = _id;
 
     END;

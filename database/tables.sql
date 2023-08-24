@@ -11,7 +11,8 @@ CREATE TABLE utenti (
 
 CREATE TABLE studenti (
   id uuid NOT NULL REFERENCES utenti(id),
-  matricola CHAR(6) NOT NULL UNIQUE CHECK (matricola ~* '^\d{6}$')
+  matricola CHAR(6) NOT NULL UNIQUE CHECK (matricola ~* '^\d{6}$'),
+  corso_di_laurea VARCHAR(6) NOT NULL REFERENCES corsi_di_laurea(codice) ON UPDATE CASCADE
 );
 
 CREATE TABLE docenti (

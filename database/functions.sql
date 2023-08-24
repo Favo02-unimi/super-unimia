@@ -33,7 +33,9 @@ CREATE OR REPLACE FUNCTION get_studenti ()
     __nome TEXT,
     __cognome TEXT,
     __email TEXT,
-    __matricola CHAR(6)
+    __matricola CHAR(6),
+    __corso_di_laurea VARCHAR(6),
+    __nome_corso_di_laurea TEXT
   )
   LANGUAGE plpgsql
   AS $$
@@ -42,9 +44,10 @@ CREATE OR REPLACE FUNCTION get_studenti ()
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT u.id, u.nome, u.cognome, u.email, s.matricola
+        SELECT u.id, u.nome, u.cognome, u.email, s.matricola, s.corso_di_laurea, cdl.nome
         FROM studenti AS s
-        INNER JOIN utenti AS u ON u.id = s.id;
+        INNER JOIN utenti AS u ON u.id = s.id
+        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = s.corso_di_laurea;
 
     END;
   $$;
