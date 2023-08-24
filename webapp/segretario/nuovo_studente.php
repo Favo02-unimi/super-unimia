@@ -26,9 +26,9 @@
     <?php
 
       if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.new_studente($1, $2, $3);";
+        $qry = "CALL unimia.new_studente($1, $2, $3, $4);";
         $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["nome"], $_POST["cognome"], $_POST["password"]));
+        $res = pg_execute($con, "", array($_POST["nome"], $_POST["cognome"], $_POST["password"], $_POST["corso_di_laurea"]));
 
         if (!$res): ?>
           <div class="notification is-danger is-light mt-6">
@@ -80,6 +80,28 @@
           </span>
         </p>
         <p class="help">Lunghezza minima 8 caratteri.</p>
+      </div>
+
+      <label class="label mt-5">Corso di laurea</label>
+      <div class="field">
+        <div class="control has-icons-left">
+          <div class="select is-fullwidth">
+            <select name="corso_di_laurea">
+              <?php
+                $qry = "SELECT __codice, __nome FROM unimia.get_corsi_di_laurea()";
+                $res = pg_prepare($con, "", $qry);
+                $res = pg_execute($con, "", array());
+        
+                while ($row = pg_fetch_assoc($res)):
+              ?>
+                <option value="<?php echo $row["__codice"] ?>"><?php echo $row["__codice"] ?> - <?php echo $row["__nome"] ?></option>
+              <?php endwhile ?>
+            </select>
+          </div>
+          <div class="icon is-small is-left">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+        </div>
       </div>
 
       <div class="icon-text mt-5">

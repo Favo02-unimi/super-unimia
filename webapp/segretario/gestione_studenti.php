@@ -36,6 +36,7 @@
           <th class="has-text-centered">Cognome</th>
           <th class="has-text-centered">Email</th>
           <th class="has-text-centered">Matricola</th>
+          <th class="has-text-centered">Corso di laurea</th>
           <th class="has-text-centered" colspan="3">Controlli</th>
         </tr>
       </thead>
@@ -43,7 +44,8 @@
       <tbody>
         <?php
 
-        $qry = "SELECT __id, __nome, __cognome, __email, __matricola FROM unimia.get_studenti()";
+        $qry = "SELECT __id, __nome, __cognome, __email, __matricola, __corso_di_laurea, __nome_corso_di_laurea
+                FROM unimia.get_studenti()";
         $res = pg_prepare($con, "", $qry);
         $res = pg_execute($con, "", array());
 
@@ -55,6 +57,7 @@
             <td><?php echo $row["__cognome"] ?></td>
             <td><?php echo $row["__email"] ?></td>
             <td><?php echo $row["__matricola"] ?></td>
+            <td><?php echo $row["__corso_di_laurea"] ?> - <?php echo $row["__nome_corso_di_laurea"] ?></td>
             <td>
               <form method="post" action="modifica_studente.php">
                 <input type="hidden" name="id" value="<?php echo $row["__id"] ?>">
@@ -62,6 +65,8 @@
                 <input type="hidden" name="cognome" value="<?php echo $row["__cognome"] ?>">
                 <input type="hidden" name="email" value="<?php echo $row["__email"] ?>">
                 <input type="hidden" name="matricola" value="<?php echo $row["__matricola"] ?>">
+                <input type="hidden" name="corso_di_laurea" value="<?php echo $row["__corso_di_laurea"] ?>">
+                <input type="hidden" name="nome_corso_di_laurea" value="<?php echo $row["__nome_corso_di_laurea"] ?>">
                 <button class="button is-link is-small">Modifica</button>
               </form>
             </td>
