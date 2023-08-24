@@ -67,7 +67,7 @@
       <label class="label mt-5">Tipo</label>
       <div class="field">
         <div class="control has-icons-left">
-          <div class="select">
+          <div class="select is-fullwidth">
             <select name="tipo">
               <option selected><?php echo $_POST["tipo"] ?></option>
               <option>Triennale</option>
