@@ -21,7 +21,7 @@
 
   ?>
 
-  <div class="container is-max-desktop box">
+  <div class="container is-max-widescreen box">
 
     <a href="nuovo_studente.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-graduate fa-xl"></i></span>

@@ -21,7 +21,7 @@
 
   ?>
 
-  <div class="container is-max-desktop box">
+  <div class="container is-max-widescreen box">
 
     <a href="nuovo_corso_di_laurea.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-graduation-cap fa-xl"></i></span>
