@@ -62,6 +62,7 @@
             <i class="fa-solid fa-barcode"></i>
           </span>
         </p>
+        <p class="help">Lunghezza massima codice 6 caratteri.</p>
       </div>
 
       <label class="label mt-5">Tipo</label>
