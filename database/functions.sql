@@ -116,3 +116,32 @@ CREATE OR REPLACE FUNCTION get_corsi_di_laurea ()
 
     END;
   $$;
+
+-- restituisce tutti gli insegnamenti
+CREATE OR REPLACE FUNCTION get_insegnamenti ()
+  RETURNS TABLE (
+    __codice VARCHAR(6),
+    __corso_di_laurea VARCHAR(6),
+    __nome_corso_di_laurea TEXT,
+    __nome TEXT,
+    __descrizione TEXT,
+    __anno ANNO_INSEGNAMENTO,
+    __responsabile uuid,
+    __nome_responsabile TEXT,
+    __email_responsabile TEXT
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(u.nome, ' ', u.cognome), u.email
+        FROM insegnamenti AS i
+        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = i.corso_di_laurea
+        INNER JOIN docenti AS d ON d.id = i.responsabile
+        INNER JOIN utenti AS u ON d.id = u.id;
+
+    END;
+  $$;

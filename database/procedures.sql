@@ -284,3 +284,71 @@ CREATE OR REPLACE PROCEDURE delete_corso_di_laurea (
 
     END;
   $$;
+
+-- crea un nuovo insegnamento
+CREATE OR REPLACE PROCEDURE new_insegnamento (
+  _codice VARCHAR(6),
+  _corso_di_laurea VARCHAR(6),
+  _nome TEXT,
+  _descrizione TEXT,
+  _anno ANNO_INSEGNAMENTO,
+  _responsabile uuid
+)
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _id uuid;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      INSERT INTO insegnamenti(codice, corso_di_laurea, nome, descrizione, anno, responsabile)
+      VALUES (_codice, _corso_di_laurea, _nome, _descrizione, _anno, _responsabile);
+      
+    END;
+  $$;
+
+-- modifica un insegnamento dato il suo codice
+-- non vengono aggiornati i campi lasciati a NULL (coalesce)
+CREATE OR REPLACE PROCEDURE edit_insegnamento (
+  _codice VARCHAR(6),
+  _new_codice VARCHAR(6),
+  _corso_di_laurea VARCHAR(6),
+  _nome TEXT,
+  _descrizione TEXT,
+  _anno ANNO_INSEGNAMENTO,
+  _responsabile uuid
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      UPDATE insegnamenti SET
+        codice = COALESCE(NULLIF(_new_codice, ''), codice),
+        corso_di_laurea = _corso_di_laurea,
+        nome = COALESCE(NULLIF(_nome, ''), nome),
+        descrizione = COALESCE(NULLIF(_descrizione, ''), descrizione),
+        anno = _anno,
+        responsabile = _responsabile
+      WHERE codice = _codice;
+
+    END;
+  $$;
+
+-- elimina un insegnamento dato il suo codice
+-- l'insegnamento non viene cancellato in caso siano presenti foreing key
+CREATE OR REPLACE PROCEDURE delete_insegnamento (
+  _codice VARCHAR(6)
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      DELETE FROM insegnamenti
+      WHERE codice = _codice;
+
+    END;
+  $$;
