@@ -14,9 +14,14 @@ function Redirect($url, $permanent = false) {
 
 function ParseError($error) {
   $startPos = strpos($error, "ERROR:");
-  $endPos = strpos($error, "DETAIL:");
+
+  $endPos1 = strpos($error, "DETAIL"); // end position for "default" errors
+  $endPos2 = strpos($error, "CONTEX"); // end position for custom trigger exceptions
   
-  return substr($error, $startPos + 7, $endPos - $startPos - 8);
+  $endPos1 = $endPos1 ? $endPos1 : PHP_INT_MAX;
+  $endPos2 = $endPos2 ? $endPos2 : PHP_INT_MAX;
+
+  return substr($error, $startPos + 7, min($endPos1, $endPos2) - $startPos - 8);
 }
 
 ?>
