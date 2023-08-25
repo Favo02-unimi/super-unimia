@@ -17,15 +17,15 @@ CREATE TABLE corsi_di_laurea (
 );
 
 CREATE TABLE studenti (
-  id uuid NOT NULL REFERENCES utenti(id),
+  id uuid PRIMARY KEY REFERENCES utenti(id),
   matricola CHAR(6) NOT NULL UNIQUE CHECK (matricola ~* '^\d{6}$'),
   corso_di_laurea VARCHAR(6) NOT NULL REFERENCES corsi_di_laurea(codice) ON UPDATE CASCADE
 );
 
 CREATE TABLE docenti (
-  id uuid NOT NULL REFERENCES utenti(id)
+  id uuid PRIMARY KEY REFERENCES utenti(id)
 );
 
 CREATE TABLE segretari (
-  id uuid NOT NULL REFERENCES utenti(id)
+  id uuid PRIMARY KEY REFERENCES utenti(id)
 );
