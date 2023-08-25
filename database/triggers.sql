@@ -60,3 +60,65 @@ CREATE OR REPLACE TRIGGER genera_matricola
   ON studenti
   FOR EACH ROW
   EXECUTE PROCEDURE genera_matricola_func();
+
+-- controlla alla creazione di un nuovo insegnamento che l'anno sia compatibile con il tipo di laurea
+CREATE OR REPLACE FUNCTION controllo_anno_insegnamento_func()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _tipo_corso TEXT;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT cdl.tipo
+      FROM corsi_di_laurea AS cdl
+      WHERE cdl.codice = NEW.corso_di_laurea
+      INTO _tipo_corso;
+
+      IF _tipo_corso = 'Triennale' AND NEW.anno IN ('4', '5') THEN
+        RAISE EXCEPTION 'Anno invalido per corso triennale';
+      END IF;
+
+      IF _tipo_corso = 'Magistrale' AND NEW.anno IN ('3', '4', '5') THEN
+        RAISE EXCEPTION 'Anno invalido per corso magistrale';
+      END IF;
+
+      RETURN NEW;
+
+    END;
+  $$;
+CREATE OR REPLACE TRIGGER controllo_anno_insegnamento 
+  BEFORE INSERT OR UPDATE
+  ON insegnamenti
+  FOR EACH ROW
+  EXECUTE PROCEDURE controllo_anno_insegnamento_func();
+
+-- controlla alla creazione di un nuovo insegnamento che il responsabile non abbia già 3 insegnamenti
+CREATE OR REPLACE FUNCTION controllo_numero_insegnamenti_per_docente_func()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _numero_insegnamenti INTEGER;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT count(*)
+      FROM insegnamenti AS i
+      WHERE i.responsabile = NEW.responsabile
+      INTO _numero_insegnamenti;
+
+      IF _numero_insegnamenti >= 3 THEN
+        RAISE EXCEPTION 'Responsabile ha già 3 insegnamenti';
+      END IF;
+
+      RETURN NEW;
+
+    END;
+  $$;
+CREATE OR REPLACE TRIGGER controllo_numero_insegnamenti_per_docente 
+  BEFORE INSERT OR UPDATE
+  ON insegnamenti
+  FOR EACH ROW
+  EXECUTE PROCEDURE controllo_numero_insegnamenti_per_docente_func();
