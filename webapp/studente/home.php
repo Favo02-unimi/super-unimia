@@ -23,6 +23,7 @@
 
   <h1>Studente</h1>
 
+  <?php require("../footer.php"); ?>
 
 </body>
 </html>
