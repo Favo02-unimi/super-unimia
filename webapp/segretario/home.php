@@ -36,43 +36,26 @@
 
     <a href="modifica_password.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-lock fa-xl"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
       <strong>Modifica password ad un utente</strong>
     </a>
 
     <a href="gestione_studenti.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-graduate fa-xl"></i></span>
-      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-list"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
       <strong>Gestione studenti</strong>
     </a>
 
     <a href="gestione_docenti.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-tie fa-xl"></i></span>
-      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-list"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
       <strong>Gestione docenti</strong>
     </a>
 
     <a href="gestione_segretari.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-gear fa-xl"></i></span>
-      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-list"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
       <strong>Gestione segretari</strong>
     </a>
 
     <a href="gestione_corsi_di_laurea.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-graduation-cap fa-xl"></i></span>
-      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-list"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span>
-      <span class="icon is-small"><i class="fa-solid fa-trash"></i></span>
       <strong>Gestione corsi di laurea</strong>
     </a>
 
