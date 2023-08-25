@@ -29,3 +29,12 @@ CREATE TABLE docenti (
 CREATE TABLE segretari (
   id uuid PRIMARY KEY REFERENCES utenti(id)
 );
+
+CREATE TABLE insegnamenti (
+  codice VARCHAR(6) PRIMARY KEY,
+  corso_di_laurea VARCHAR(6) NOT NULL REFERENCES corsi_di_laurea(codice) ON UPDATE CASCADE,
+  nome TEXT NOT NULL,
+  descrizione TEXT NOT NULL,
+  anno ANNO_INSEGNAMENTO NOT NULL,
+  responsabile uuid NOT NULL REFERENCES docenti(id)
+);
