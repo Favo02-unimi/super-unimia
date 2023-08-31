@@ -58,6 +58,7 @@
         <p class="control">
           <input type="submit" name="submit" value="Conferma cancellazione" class="button is-danger is-fullwidth is-medium">
         </p>
+        <p class="help is-danger">È possibile cancellare un docente solo in caso non sia mai utilizzato (non abbia appelli o insegnamenti). Utilizzare l'archivio per dismettere.</p>
       </div>
 
     </form>

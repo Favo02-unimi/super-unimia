@@ -58,6 +58,7 @@
         <p class="control">
           <input type="submit" name="submit" value="Conferma cancellazione" class="button is-danger is-fullwidth is-medium">
         </p>
+        <p class="help is-danger">È possibile cancellare un corso di laurea solo in caso non sia mai utilizzato (non abbia docenti o insegnamenti associati). Utilizzare l'archivio per dismettere.</p>
       </div>
 
     </form>
