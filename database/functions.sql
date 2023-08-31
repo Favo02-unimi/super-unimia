@@ -52,6 +52,35 @@ CREATE OR REPLACE FUNCTION get_studenti ()
     END;
   $$;
 
+-- restituisce uno studente dato il suo id
+CREATE OR REPLACE FUNCTION get_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __id uuid,
+    __nome TEXT,
+    __cognome TEXT,
+    __email TEXT,
+    __matricola CHAR(6),
+    __corso_di_laurea VARCHAR(6),
+    __nome_corso_di_laurea TEXT
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT u.id, u.nome, u.cognome, u.email, s.matricola, s.corso_di_laurea, cdl.nome
+        FROM studenti AS s
+        INNER JOIN utenti AS u ON u.id = s.id
+        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = s.corso_di_laurea
+        WHERE u.id = _id;
+
+    END;
+  $$;
+
 -- restituisce tutti i docenti disponibili
 CREATE OR REPLACE FUNCTION get_docenti ()
   RETURNS TABLE (
@@ -74,6 +103,31 @@ CREATE OR REPLACE FUNCTION get_docenti ()
     END;
   $$;
 
+-- restituisce un doceente dato il suo id
+CREATE OR REPLACE FUNCTION get_docente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __id uuid,
+    __nome TEXT,
+    __cognome TEXT,
+    __email TEXT
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT u.id, u.nome, u.cognome, u.email
+        FROM docenti AS d
+        INNER JOIN utenti AS u ON u.id = d.id
+        WHERE u.id = _id;
+
+    END;
+  $$;
+
 -- restituisce tutti i segretari disponibili
 CREATE OR REPLACE FUNCTION get_segretari ()
   RETURNS TABLE (
@@ -92,6 +146,31 @@ CREATE OR REPLACE FUNCTION get_segretari ()
         SELECT u.id, u.nome, u.cognome, u.email
         FROM segretari AS s
         INNER JOIN utenti AS u ON u.id = s.id;
+
+    END;
+  $$;
+
+-- restituisce un segretario dato il suo id
+CREATE OR REPLACE FUNCTION get_segretario (
+  _id uuid
+)
+  RETURNS TABLE (
+    __id uuid,
+    __nome TEXT,
+    __cognome TEXT,
+    __email TEXT
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT u.id, u.nome, u.cognome, u.email
+        FROM segretari AS s
+        INNER JOIN utenti AS u ON u.id = s.id
+        WHERE u.id = _id;
 
     END;
   $$;
