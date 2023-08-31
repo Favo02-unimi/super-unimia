@@ -21,7 +21,25 @@
 
   ?>
 
-  <h1>Docente</h1>
+  <div class="container is-max-desktop box">
+
+    <?php if (isset($_SESSION["feedback"])): ?>
+      <div class="notification is-success is-light mt-6">
+        <strong><?php echo $_SESSION["feedback"]; unset($_SESSION["feedback"]) ?></strong>
+      </div>
+    <?php endif; ?>
+
+    <div class="block">
+      <p class="title is-2 is-link">Buongiorno, <?php echo $_SESSION["username"]; ?>.</p>
+      <p class="subtitle is-4">Servizi accessibili come <?php echo $_SESSION["usertype"]; ?>:</p>
+    </div>
+
+    <a href="modifica_password.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-lock fa-xl"></i></span>
+      <strong>Modifica password</strong>
+    </a>
+
+  </div>
 
   <?php require("../footer.php"); ?>
 
