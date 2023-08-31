@@ -206,7 +206,7 @@ CREATE OR REPLACE PROCEDURE delete_segretario (
     END;
   $$;
 
--- modifica la password di un utente
+-- modifica la password di un utente (data solo la mail, senza controlli, quindi per un admin)
 CREATE OR REPLACE PROCEDURE edit_user_password (
   _email TEXT,
   _password TEXT
@@ -220,6 +220,28 @@ CREATE OR REPLACE PROCEDURE edit_user_password (
       UPDATE utenti SET
         password = crypt(_password, gen_salt('bf'))
       WHERE email = LOWER(_email);
+
+    END;
+  $$;
+
+-- modifica la password di un utente (dato l'id e la vecchia password, quindi per utenti semplici)
+CREATE OR REPLACE PROCEDURE edit_password (
+  _id uuid,
+  _old_password TEXT,
+  _password TEXT
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+      SET search_path TO unimia;
+
+      UPDATE utenti SET
+        password = crypt(_password, gen_salt('bf'))
+      WHERE id = _id
+      AND password = crypt(_old_password, password);
+      IF NOT FOUND THEN
+        raise exception 'Vecchia password errata'; 
+      END IF;
 
     END;
   $$;
