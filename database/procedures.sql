@@ -220,6 +220,9 @@ CREATE OR REPLACE PROCEDURE edit_user_password (
       UPDATE utenti SET
         password = crypt(_password, gen_salt('bf'))
       WHERE email = LOWER(_email);
+      IF NOT FOUND THEN
+        raise exception 'Utente non trovato'; 
+      END IF;
 
     END;
   $$;
