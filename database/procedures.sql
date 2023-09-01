@@ -377,3 +377,76 @@ CREATE OR REPLACE PROCEDURE delete_insegnamento (
 
     END;
   $$;
+
+-- crea un appello
+CREATE OR REPLACE PROCEDURE new_appello (
+  _insegnamento VARCHAR(6),
+  _data DATE,
+  _ora TIME,
+  _luogo TEXT
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      IF Now() > _data THEN
+        raise exception E'L\'appello non deve essere nel passato';
+      END IF;
+
+      INSERT INTO appelli(insegnamento, data, ora, luogo)
+      VALUES (_insegnamento, _data, _ora, _luogo);
+
+    END;
+  $$;
+
+-- modifica un appello dato il suo codice
+CREATE OR REPLACE PROCEDURE edit_appello (
+  _codice uuid,
+  _data DATE,
+  _ora TIME,
+  _luogo TEXT
+)
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _old_data DATE;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT data INTO _old_data FROM appelli WHERE codice = _codice;
+
+      IF Now() > _old_data THEN
+        raise exception E'L\'appello è passato, non può essere modificato';
+      END IF;
+
+      IF Now() > _data THEN
+        raise exception E'L\'appello non deve essere nel passato';
+      END IF;
+
+      UPDATE appelli SET
+        data = _data,
+        ora = _ora,
+        luogo = _luogo
+      WHERE codice = _codice;
+
+    END;
+  $$;
+
+-- elimina un appello dato il suo codice
+-- l'appello non viene cancellato in caso siano presenti foreing key
+CREATE OR REPLACE PROCEDURE delete_appello (
+  _codice uuid
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      DELETE FROM appelli
+      WHERE codice = _codice;
+
+    END;
+  $$;

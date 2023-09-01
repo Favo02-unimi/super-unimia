@@ -225,6 +225,7 @@ CREATE OR REPLACE FUNCTION get_insegnamenti ()
     END;
   $$;
 
+-- restituisce tutti gli insegnamenti di cui un docente è responsabile
 CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
   _id uuid
 )
@@ -250,3 +251,34 @@ CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
 
     END;
   $$;
+
+-- restituisce tutti gli appelli di insegnamenti di cui il docente è responsabile
+CREATE OR REPLACE FUNCTION get_appelli_per_docente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __codice uuid,
+    __insegnamento VARCHAR(6),
+    __nome_insegnamento TEXT,
+    __data DATE,
+    __ora TIME,
+    __luogo TEXT,
+    __iscritti INTEGER
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT a.codice, a.insegnamento, i.nome, a.data, a.ora, a.luogo, COUNT(isc.*)::INTEGER AS iscritti
+        FROM appelli AS a
+        INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
+        LEFT JOIN iscrizioni AS isc ON isc.appello = a.codice
+        WHERE i.responsabile = _id
+        GROUP BY a.codice, a.insegnamento, a.codice, i.nome, a.data, a.ora, a.luogo;
+
+    END;
+  $$;
+
