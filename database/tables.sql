@@ -38,3 +38,18 @@ CREATE TABLE insegnamenti (
   anno ANNO_INSEGNAMENTO NOT NULL,
   responsabile uuid NOT NULL REFERENCES docenti(id)
 );
+
+CREATE TABLE appelli (
+  codice uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  insegnamento VARCHAR(6) NOT NULL REFERENCES insegnamenti(codice) ON UPDATE CASCADE,
+  data DATE NOT NULL,
+  ora TIME NOT NULL,
+  luogo TEXT NOT NULL
+);
+
+CREATE TABLE iscrizioni (
+  appello uuid NOT NULL REFERENCES appelli(codice),
+  studente uuid NOT NULL REFERENCES studenti(id),
+  voto INTEGER,
+  PRIMARY KEY(appello, studente)
+);
