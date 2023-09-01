@@ -224,3 +224,29 @@ CREATE OR REPLACE FUNCTION get_insegnamenti ()
 
     END;
   $$;
+
+CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __codice VARCHAR(6),
+    __corso_di_laurea VARCHAR(6),
+    __nome_corso_di_laurea TEXT,
+    __nome TEXT,
+    __descrizione TEXT,
+    __anno ANNO_INSEGNAMENTO
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno
+        FROM insegnamenti AS i
+        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = i.corso_di_laurea
+        WHERE i.responsabile = _id;
+
+    END;
+  $$;
