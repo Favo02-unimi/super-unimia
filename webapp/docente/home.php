@@ -44,6 +44,11 @@
       <strong>Modifica password</strong>
     </a>
 
+    <a href="gestione_insegnamenti.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-book fa-xl"></i></span>
+      <strong>Gestione insegnamenti</strong>
+    </a>
+
   </div>
 
   <?php require("../footer.php"); ?>
