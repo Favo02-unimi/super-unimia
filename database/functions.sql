@@ -191,7 +191,8 @@ CREATE OR REPLACE FUNCTION get_corsi_di_laurea ()
 
       RETURN QUERY
         SELECT c.codice, c.tipo, c.nome, c.descrizione
-        FROM corsi_di_laurea AS c;
+        FROM corsi_di_laurea AS c
+        ORDER BY c.codice;
 
     END;
   $$;
@@ -220,7 +221,8 @@ CREATE OR REPLACE FUNCTION get_insegnamenti ()
         FROM insegnamenti AS i
         INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = i.corso_di_laurea
         INNER JOIN docenti AS d ON d.id = i.responsabile
-        INNER JOIN utenti AS u ON d.id = u.id;
+        INNER JOIN utenti AS u ON d.id = u.id
+        ORDER BY i.corso_di_laurea, i.anno, i.codice;
 
     END;
   $$;
@@ -247,7 +249,8 @@ CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
         SELECT i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno
         FROM insegnamenti AS i
         INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = i.corso_di_laurea
-        WHERE i.responsabile = _id;
+        WHERE i.responsabile = _id
+        ORDER BY i.corso_di_laurea, i.anno, i.codice;
 
     END;
   $$;
@@ -277,7 +280,8 @@ CREATE OR REPLACE FUNCTION get_appelli_per_docente (
         INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
         LEFT JOIN iscrizioni AS isc ON isc.appello = a.codice
         WHERE i.responsabile = _id
-        GROUP BY a.codice, a.insegnamento, a.codice, i.nome, a.data, a.ora, a.luogo;
+        GROUP BY a.codice, a.insegnamento, a.codice, i.nome, a.data, a.ora, a.luogo
+        ORDER BY a.data;
 
     END;
   $$;
