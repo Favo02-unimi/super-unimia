@@ -122,3 +122,40 @@ CREATE OR REPLACE TRIGGER controllo_numero_insegnamenti_per_docente
   ON insegnamenti
   FOR EACH ROW
   EXECUTE PROCEDURE controllo_numero_insegnamenti_per_docente_func();
+
+-- controlla che non esistano più appelli dello corso di laurea dello stesso corso alla creazione di un appello
+CREATE OR REPLACE FUNCTION controllo_appelli_per_anno_func()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _anno ANNO_INSEGNAMENTO;
+    DECLARE _cdl VARCHAR(6);
+    DECLARE _appelli INTEGER;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT i.anno, i.corso_di_laurea INTO _anno, _cdl
+      FROM insegnamenti AS i
+      WHERE i.codice = NEW.insegnamento;
+
+      SELECT count(*) INTO _appelli
+      FROM appelli AS a
+      INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
+      WHERE i.corso_di_laurea = _cdl
+      AND i.anno = _anno
+      AND a.data = NEW.data;
+
+      IF _appelli >= 1 THEN
+        RAISE EXCEPTION 'Sono già presenti appelli in questa giornata';
+      END IF;
+
+      RETURN NEW;
+
+    END;
+  $$;
+CREATE OR REPLACE TRIGGER controllo_appelli_per_anno
+  BEFORE INSERT OR UPDATE
+  ON appelli
+  FOR EACH ROW
+  EXECUTE PROCEDURE controllo_appelli_per_anno_func();
