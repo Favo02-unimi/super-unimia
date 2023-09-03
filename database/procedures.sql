@@ -482,3 +482,32 @@ CREATE OR REPLACE PROCEDURE disiscriviti_appello (
 
     END;
   $$;
+
+-- valuta uno studente iscritto ad un appello
+CREATE OR REPLACE PROCEDURE valuta_iscrizione (
+  _id uuid,
+  _codice uuid,
+  _voto INTEGER
+)
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _data DATE;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT a.data INTO _data
+      FROM appelli AS a
+      WHERE a.codice = _codice;
+
+      IF _data > Now() THEN
+        raise exception E'L\'appello da valutare deve essere passato';
+      END IF;
+
+      UPDATE iscrizioni AS i SET
+        voto = _voto
+      WHERE i.appello = _codice
+      AND i.studente = _id;
+
+    END;
+  $$;
