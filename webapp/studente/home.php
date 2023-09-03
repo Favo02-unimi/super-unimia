@@ -44,6 +44,11 @@
       <strong>Modifica password</strong>
     </a>
 
+    <a href="gestione_appelli.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-calendar-day fa-xl"></i></span>
+      <strong>Gestione appelli</strong>
+    </a>
+
   </div>
 
   <?php require("../footer.php"); ?>
