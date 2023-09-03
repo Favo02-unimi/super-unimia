@@ -319,6 +319,40 @@ CREATE OR REPLACE FUNCTION get_iscrizioni_per_docente (
     END;
   $$;
 
+-- restituisce tutte le valutazioni date da parte di un docente
+CREATE OR REPLACE FUNCTION get_valutazioni_per_docente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __appello uuid,
+    __insegnamento VARCHAR(6),
+    __nome_insegnamento TEXT,
+    __data DATE,
+    __studente uuid,
+    __matricola CHAR(6),
+    __nome TEXT,
+    __email TEXT,
+    __voto INTEGER
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT isc.appello, a.insegnamento, i.nome, a.data, isc.studente, s.matricola, CONCAT(u.nome, ' ', u.cognome), u.email, isc.voto
+        FROM iscrizioni AS isc
+        INNER JOIN appelli AS a ON a.codice = isc.appello
+        INNER JOIN insegnamenti i ON a.insegnamento = i.codice
+        INNER JOIN studenti AS s ON s.id = isc.studente
+        INNER JOIN utenti AS u ON u.id = isc.studente
+        WHERE i.responsabile = _id
+        AND isc.voto IS NOT NULL;
+
+    END;
+  $$;
+
 -- restituisce tutti gli appelli di insegnamenti del corso di laurea dello studente
 CREATE OR REPLACE FUNCTION get_appelli_per_studente (
   _id uuid
