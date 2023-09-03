@@ -47,7 +47,8 @@ CREATE OR REPLACE FUNCTION get_studenti ()
         SELECT u.id, u.nome, u.cognome, u.email, s.matricola, s.corso_di_laurea, cdl.nome
         FROM studenti AS s
         INNER JOIN utenti AS u ON u.id = s.id
-        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = s.corso_di_laurea;
+        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = s.corso_di_laurea
+        ORDER BY u.cognome, u.nome;
 
     END;
   $$;
@@ -98,7 +99,8 @@ CREATE OR REPLACE FUNCTION get_docenti ()
       RETURN QUERY
         SELECT u.id, u.nome, u.cognome, u.email
         FROM docenti AS d
-        INNER JOIN utenti AS u ON u.id = d.id;
+        INNER JOIN utenti AS u ON u.id = d.id
+        ORDER BY u.cognome, u.nome;
 
     END;
   $$;
@@ -145,7 +147,8 @@ CREATE OR REPLACE FUNCTION get_segretari ()
       RETURN QUERY
         SELECT u.id, u.nome, u.cognome, u.email
         FROM segretari AS s
-        INNER JOIN utenti AS u ON u.id = s.id;
+        INNER JOIN utenti AS u ON u.id = s.id
+        ORDER BY u.cognome, u.nome;
 
     END;
   $$;
@@ -314,7 +317,8 @@ CREATE OR REPLACE FUNCTION get_iscrizioni_per_docente (
         INNER JOIN studenti AS s ON s.id = isc.studente
         INNER JOIN utenti AS u ON u.id = isc.studente
         WHERE i.responsabile = _id
-        AND isc.voto IS NULL;
+        AND isc.voto IS NULL
+        ORDER BY a.data, u.cognome, u.nome;
 
     END;
   $$;
@@ -348,7 +352,8 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_docente (
         INNER JOIN studenti AS s ON s.id = isc.studente
         INNER JOIN utenti AS u ON u.id = isc.studente
         WHERE i.responsabile = _id
-        AND isc.voto IS NOT NULL;
+        AND isc.voto IS NOT NULL
+        ORDER BY a.data, u.cognome, u.nome;
 
     END;
   $$;
@@ -381,22 +386,23 @@ CREATE OR REPLACE FUNCTION get_appelli_per_studente (
       RETURN QUERY
         SELECT a.codice, a.insegnamento, i.nome, a.data, a.ora, a.luogo,
         ( -- ultimo voto (se presente)
-          SELECT isc.voto
-          FROM iscrizioni AS isc
-          INNER JOIN appelli a on a.codice = isc.appello
-          INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
-          WHERE isc.studente = _id
-          AND isc.voto IS NOT NULL
-          ORDER BY a.data
+          SELECT isc2.voto
+          FROM iscrizioni AS isc2
+          INNER JOIN appelli AS a2 on a2.codice = isc2.appello
+          INNER JOIN insegnamenti AS i2 ON i2.codice = a2.insegnamento
+          WHERE isc2.studente = _id
+          AND i2.codice = a.insegnamento
+          AND isc2.voto IS NOT NULL
+          ORDER BY a2.data
           LIMIT 1
         ) AS ultimo_voto,
         ( -- già iscritto (l'appello deve venir visualizzato lo stesso)
           CASE
             WHEN EXISTS (
               SELECT *
-              FROM iscrizioni AS isc
-              WHERE isc.studente = _id
-              AND isc.appello = a.codice
+              FROM iscrizioni AS isc2
+              WHERE isc2.studente = _id
+              AND isc2.appello = a.codice
             ) THEN true
             ELSE false
           END
@@ -405,7 +411,7 @@ CREATE OR REPLACE FUNCTION get_appelli_per_studente (
         INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
         WHERE i.corso_di_laurea = _cdl
         AND a.data > Now()
-        ORDER BY a.data;
+        ORDER BY a.data, i.anno;
 
     END;
   $$;
