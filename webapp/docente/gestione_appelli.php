@@ -71,7 +71,7 @@
               </form>
             </td>
             <td>
-              <form method="post" action=".php">
+              <form method="post" action="gestione_valutazioni.php">
                 <input type="hidden" name="codice" value="<?php echo $row["__codice"] ?>">
                 <button class="button is-link is-small">Valutazioni</button>
               </form>
