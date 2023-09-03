@@ -286,3 +286,59 @@ CREATE OR REPLACE FUNCTION get_appelli_per_docente (
     END;
   $$;
 
+-- restituisce tutti gli appelli di insegnamenti del corso di laurea dello studente
+CREATE OR REPLACE FUNCTION get_appelli_per_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __codice uuid,
+    __insegnamento VARCHAR(6),
+    __nome_insegnamento TEXT,
+    __data DATE,
+    __ora TIME,
+    __luogo TEXT,
+    __ultimo_voto INTEGER,
+    __iscritto BOOLEAN
+  )
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _cdl VARCHAR(6);
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT s.corso_di_laurea INTO _cdl
+      FROM studenti AS s
+      WHERE s.id = _id;
+
+      RETURN QUERY
+        SELECT a.codice, a.insegnamento, i.nome, a.data, a.ora, a.luogo,
+        ( -- ultimo voto (se presente)
+          SELECT isc.voto
+          FROM iscrizioni AS isc
+          INNER JOIN appelli a on a.codice = isc.appello
+          INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
+          WHERE isc.studente = _id
+          AND isc.voto IS NOT NULL
+          ORDER BY a.data
+          LIMIT 1
+        ) AS ultimo_voto,
+        ( -- già iscritto (l'appello deve venir visualizzato lo stesso)
+          CASE
+            WHEN EXISTS (
+              SELECT *
+              FROM iscrizioni AS isc
+              WHERE isc.studente = _id
+              AND isc.appello = a.codice
+            ) THEN true
+            ELSE false
+          END
+        ) AS iscritto
+        FROM appelli AS a
+        INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
+        WHERE i.corso_di_laurea = _cdl
+        AND a.data > Now()
+        ORDER BY a.data;
+
+    END;
+  $$;
