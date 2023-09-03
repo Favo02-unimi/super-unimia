@@ -31,7 +31,7 @@
           <th class="has-text-centered">Nome</th>
           <th class="has-text-centered">Descrizione</th>
           <th class="has-text-centered">Anno</th>
-          <th class="has-text-centered" colspan="2">Controlli</th>
+          <th class="has-text-centered" colspan="3">Controlli</th>
         </tr>
       </thead>
       
@@ -55,6 +55,12 @@
               <form method="post" action="gestione_appelli.php">
                 <input type="hidden" name="insegnamento" value="<?php echo $row["__codice"] ?>">
                 <button class="button is-link is-small">Appelli</button>
+              </form>
+            </td>
+            <td>
+              <form method="post" action="gestione_iscrizioni.php">
+                <input type="hidden" name="insegnamento" value="<?php echo $row["__codice"] ?>">
+                <button class="button is-link is-small">Iscritti</button>
               </form>
             </td>
             <td>

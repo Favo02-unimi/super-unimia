@@ -54,6 +54,11 @@
       <strong>Gestione appelli</strong>
     </a>
 
+    <a href="gestione_iscrizioni.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-users fa-xl"></i></span>
+      <strong>Gestione iscrizioni</strong>
+    </a>
+
   </div>
 
   <?php require("../footer.php"); ?>
