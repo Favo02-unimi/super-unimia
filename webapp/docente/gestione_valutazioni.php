@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="../styles/index.css">
   <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Gestione iscrizioni - SuperUnimia</title>
+  <title>Gestione valutazioni - SuperUnimia</title>
 </head>
 <body class="has-background-dark has-text-light">
 
@@ -31,6 +31,7 @@
           <th class="has-text-centered">Matricola</th>
           <th class="has-text-centered">Nome</th>
           <th class="has-text-centered">Email</th>
+          <th class="has-text-centered">Voto</th>
           <th class="has-text-centered" colspan="1">Controlli</th>
         </tr>
       </thead>
@@ -38,7 +39,7 @@
       <tbody>
         <?php
 
-        $qry = "SELECT __appello, __insegnamento, __nome_insegnamento, __data, __studente, __matricola, __nome, __email FROM unimia.get_iscrizioni_per_docente($1)";
+        $qry = "SELECT __appello, __insegnamento, __nome_insegnamento, __data, __studente, __matricola, __nome, __email, __voto FROM unimia.get_valutazioni_per_docente($1)";
         $res = pg_prepare($con, "", $qry);
         $res = pg_execute($con, "", array($_SESSION["userid"]));
 
@@ -51,6 +52,7 @@
             <td><?php echo $row["__matricola"] ?></td>
             <td><?php echo $row["__nome"] ?></td>
             <td><?php echo $row["__email"] ?></td>
+            <td><?php echo $row["__voto"] ?></td>
             <td>
               <form method="post" action="valuta_iscrizione.php">
                 <input type="hidden" name="appello" value="<?php echo $row["__appello"] ?>">
@@ -61,7 +63,8 @@
                 <input type="hidden" name="matricola" value="<?php echo $row["__matricola"] ?>">
                 <input type="hidden" name="nome" value="<?php echo $row["__nome"] ?>">
                 <input type="hidden" name="email" value="<?php echo $row["__email"] ?>">
-                <button class="button is-link is-small">Valuta</button>
+                <input type="hidden" name="voto" value="<?php echo $row["__voto"] ?>">
+                <button class="button is-link is-small">Modifica</button>
               </form>
             </td>
           </tr>
