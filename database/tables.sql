@@ -50,6 +50,6 @@ CREATE TABLE appelli (
 CREATE TABLE iscrizioni (
   appello uuid NOT NULL REFERENCES appelli(codice),
   studente uuid NOT NULL REFERENCES studenti(id),
-  voto INTEGER,
+  voto INTEGER CHECK (voto BETWEEN 0 AND 31) ,
   PRIMARY KEY(appello, studente)
 );
