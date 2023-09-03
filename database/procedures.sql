@@ -450,3 +450,35 @@ CREATE OR REPLACE PROCEDURE delete_appello (
 
     END;
   $$;
+
+-- iscrivere uno studente ad un appello
+CREATE OR REPLACE PROCEDURE iscriviti_appello (
+  _id uuid,
+  _codice uuid
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      INSERT INTO iscrizioni VALUES(_codice, _id, NULL);
+
+    END;
+  $$;
+
+-- disiscrivere uno studente ad un appello
+CREATE OR REPLACE PROCEDURE disiscriviti_appello (
+  _id uuid,
+  _codice uuid
+)
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      DELETE FROM iscrizioni AS i WHERE i.appello = _codice AND i.studente = _id;
+
+    END;
+  $$;
