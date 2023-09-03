@@ -23,6 +23,13 @@
 
   <div class="container is-max-widescreen box">
 
+    <span class="icon-text mb-4">
+      <span class="icon is-large">
+        <i class="fa-solid fa-user-tie fa-2xl"></i>
+      </span>
+      <h1 class="title mt-2">Gestione docenti</h1>
+    </span>
+
     <a href="nuovo_docente.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-tie fa-xl"></i></span>
       <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>

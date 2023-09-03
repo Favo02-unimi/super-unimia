@@ -23,6 +23,13 @@
 
   <div class="container is-max-widescreen box">
 
+    <span class="icon-text mb-4">
+      <span class="icon is-large">
+        <i class="fa-solid fa-calendar-day fa-2xl"></i>
+      </span>
+      <h1 class="title mt-2">Gestione appelli</h1>
+    </span>
+
     <table class="table is-fullwidth is-hoverable has-text-centered">
       <thead>
         <tr>
