@@ -69,6 +69,11 @@
       <strong>Gestione insegnamenti</strong>
     </a>
 
+    <a href="visualizza_carriere.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-marker fa-xl"></i></span>
+      <strong>Visualizza carriere studenti</strong>
+    </a>
+
   </div>
 
   <?php require("../footer.php"); ?>
