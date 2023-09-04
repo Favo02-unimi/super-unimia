@@ -415,3 +415,50 @@ CREATE OR REPLACE FUNCTION get_appelli_per_studente (
 
     END;
   $$;
+
+-- restituisce tutte le valutazioni date ad uno studente
+CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __appello uuid,
+    __insegnamento VARCHAR(6),
+    __nome_insegnamento TEXT,
+    __data DATE,
+    __docente uuid,
+    __nome_docente TEXT,
+    __voto INTEGER,
+    __valida BOOLEAN
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT isc.appello, a.insegnamento, i.nome, a.data, i.responsabile, CONCAT(u.nome, ' ', u.cognome), isc.voto,
+          (
+            CASE
+              WHEN EXISTS (
+                SELECT *
+                FROM iscrizioni AS isc2
+                INNER JOIN appelli a2 on isc2.appello = a2.codice
+                WHERE isc2.studente = _id
+                AND a2.insegnamento = a.insegnamento
+                AND a2.data > a.data
+              ) THEN false
+              WHEN isc.voto < 18 THEN false
+              ELSE true
+            END
+          ) as valida
+        FROM iscrizioni AS isc
+        INNER JOIN appelli AS a ON a.codice = isc.appello
+        INNER JOIN insegnamenti i ON a.insegnamento = i.codice
+        INNER JOIN utenti AS u ON u.id = i.responsabile
+        WHERE isc.studente = _id
+        AND isc.voto IS NOT NULL
+        ORDER BY i.codice, a.data;
+
+    END;
+  $$;
