@@ -49,6 +49,11 @@
       <strong>Gestione appelli</strong>
     </a>
 
+    <a href="visualizza_corsi_di_laurea.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-graduation-cap fa-xl"></i></span>
+      <strong>Visualizza corsi di laurea</strong>
+    </a>
+
   </div>
 
   <?php require("../footer.php"); ?>
