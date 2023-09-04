@@ -44,14 +44,19 @@
       <strong>Modifica password</strong>
     </a>
 
+    <a href="visualizza_corsi_di_laurea.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-graduation-cap fa-xl"></i></span>
+      <strong>Visualizza corsi di laurea</strong>
+    </a>
+
     <a href="gestione_appelli.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-calendar-day fa-xl"></i></span>
       <strong>Gestione appelli</strong>
     </a>
 
-    <a href="visualizza_corsi_di_laurea.php" class="block button is-link is-outlined is-fullwidth">
-      <span class="icon is-small"><i class="fa-solid fa-graduation-cap fa-xl"></i></span>
-      <strong>Visualizza corsi di laurea</strong>
+    <a href="valutazioni.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-marker fa-xl"></i></span>
+      <strong>Visualizza valutazioni e carriera</strong>
     </a>
 
   </div>
