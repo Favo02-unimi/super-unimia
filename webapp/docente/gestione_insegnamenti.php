@@ -50,8 +50,15 @@
         $res = pg_execute($con, "", array($_SESSION["userid"]));
 
         while ($row = pg_fetch_assoc($res)):
-
         ?>
+        <?php
+          if ($curCdl != $row["__corso_di_laurea"]):
+          $curCdl = $row["__corso_di_laurea"];
+        ?>
+          <tr>
+            <td colspan="8" class="has-text-centered has-text-weight-bold"><?php echo $row["__corso_di_laurea"] ?> - <?php echo $row["__nome_corso_di_laurea"] ?></td>
+          </tr>
+        <?php endif ?>
           <tr>
             <td><?php echo $row["__codice"] ?></td>
             <td><?php echo $row["__corso_di_laurea"] ?> - <?php echo $row["__nome_corso_di_laurea"] ?></td>

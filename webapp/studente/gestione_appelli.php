@@ -50,8 +50,15 @@
         $res = pg_execute($con, "", array($_SESSION["userid"]));
 
         while ($row = pg_fetch_assoc($res)):
-
         ?>
+        <?php
+          if ($curIns != $row["__insegnamento"]):
+          $curIns = $row["__insegnamento"];
+        ?>
+          <tr>
+            <td colspan="6" class="has-text-centered has-text-weight-bold"><?php echo $row["__insegnamento"] ?> - <?php echo $row["__nome_insegnamento"] ?></td>
+          </tr>
+        <?php endif ?>
           <tr>
             <td><?php echo $row["__insegnamento"] ?> - <?php echo $row["__nome_insegnamento"] ?></td>
             <td><?php echo $row["__data"] ?></td>
