@@ -48,7 +48,7 @@ CREATE OR REPLACE FUNCTION get_studenti ()
         FROM studenti AS s
         INNER JOIN utenti AS u ON u.id = s.id
         INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = s.corso_di_laurea
-        ORDER BY u.cognome, u.nome;
+        ORDER BY s.corso_di_laurea, u.cognome, u.nome;
 
     END;
   $$;
@@ -284,7 +284,7 @@ CREATE OR REPLACE FUNCTION get_appelli_per_docente (
         LEFT JOIN iscrizioni AS isc ON isc.appello = a.codice
         WHERE i.responsabile = _id
         GROUP BY a.codice, a.insegnamento, a.codice, i.nome, a.data, a.ora, a.luogo
-        ORDER BY a.data;
+        ORDER BY a.insegnamento, a.data;
 
     END;
   $$;
@@ -318,7 +318,7 @@ CREATE OR REPLACE FUNCTION get_iscrizioni_per_docente (
         INNER JOIN utenti AS u ON u.id = isc.studente
         WHERE i.responsabile = _id
         AND isc.voto IS NULL
-        ORDER BY a.data, u.cognome, u.nome;
+        ORDER BY i.codice, a.data, u.cognome, u.nome;
 
     END;
   $$;
@@ -353,7 +353,7 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_docente (
         INNER JOIN utenti AS u ON u.id = isc.studente
         WHERE i.responsabile = _id
         AND isc.voto IS NOT NULL
-        ORDER BY a.data, u.cognome, u.nome;
+        ORDER BY i.codice, a.data, u.cognome, u.nome;
 
     END;
   $$;
@@ -411,7 +411,7 @@ CREATE OR REPLACE FUNCTION get_appelli_per_studente (
         INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
         WHERE i.corso_di_laurea = _cdl
         AND a.data > Now()
-        ORDER BY a.data, i.anno;
+        ORDER BY i.codice, a.data;
 
     END;
   $$;
