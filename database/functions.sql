@@ -230,6 +230,40 @@ CREATE OR REPLACE FUNCTION get_insegnamenti ()
     END;
   $$;
 
+-- restituisce tutti gli appelli
+CREATE OR REPLACE FUNCTION get_appelli ()
+  RETURNS TABLE (
+    __codice uuid,
+    __corso_di_laurea VARCHAR(6),
+    __nome_corso_di_laurea TEXT,
+    __insegnamento VARCHAR(6),
+    __nome_insegnamento TEXT,
+    __data DATE,
+    __ora TIME,
+    __luogo TEXT,
+    __docente uuid,
+    __nome_docente TEXT,
+    __iscritti INTEGER
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT a.codice, i.corso_di_laurea, cdl.nome, a.insegnamento, i.nome, a.data, a.ora, a.luogo, i.responsabile, CONCAT(u.nome, ' ', u.cognome), COUNT(isc.*)::INTEGER AS iscritti
+        FROM appelli AS a
+        INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
+        INNER JOIN utenti AS u ON u.id = i.responsabile
+        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = i.corso_di_laurea
+        LEFT JOIN iscrizioni AS isc ON isc.appello = a.codice
+        GROUP BY a.codice, i.corso_di_laurea, cdl.nome, a.insegnamento, i.nome, a.data, a.ora, a.luogo, i.responsabile, u.nome, u.cognome
+        ORDER BY i.corso_di_laurea, a.insegnamento, a.data;
+
+    END;
+  $$;
+
 -- restituisce tutte le valutazioni e le carriere
 CREATE OR REPLACE FUNCTION get_valutazioni ()
   RETURNS TABLE (
