@@ -47,7 +47,7 @@
       <tbody>
         <?php
 
-        $qry = "SELECT __insegnamento, __nome_insegnamento, __data, __nome_docente, __studente, __nome_studente, __matricola_studente, __voto, __valida FROM unimia.get_valutazioni_per_segretario()";
+        $qry = "SELECT __insegnamento, __nome_insegnamento, __data, __nome_docente, __studente, __nome_studente, __matricola_studente, __voto, __valida FROM unimia.get_valutazioni()";
         $res = pg_prepare($con, "", $qry);
         $res = pg_execute($con, "", array());
 

@@ -230,6 +230,58 @@ CREATE OR REPLACE FUNCTION get_insegnamenti ()
     END;
   $$;
 
+-- restituisce tutte le valutazioni e le carriere
+CREATE OR REPLACE FUNCTION get_valutazioni ()
+  RETURNS TABLE (
+    __appello uuid,
+    __insegnamento VARCHAR(6),
+    __nome_insegnamento TEXT,
+    __data DATE,
+    __docente uuid,
+    __nome_docente TEXT,
+    __studente uuid,
+    __nome_studente TEXT,
+    __matricola_studente CHAR(6),
+    __voto INTEGER,
+    __valida BOOLEAN
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT isc.appello, a.insegnamento, i.nome, a.data,
+          i.responsabile, CONCAT(udoc.nome, ' ', udoc.cognome),
+          isc.studente, CONCAT(ustu.nome, ' ', ustu.cognome), s.matricola,
+          isc.voto,
+          (
+            CASE
+              WHEN EXISTS (
+                SELECT *
+                FROM iscrizioni AS isc2
+                INNER JOIN appelli a2 on isc2.appello = a2.codice
+                WHERE isc2.studente = isc.studente
+                AND a2.insegnamento = a.insegnamento
+                AND a2.data > a.data
+              ) THEN false
+              WHEN isc.voto < 18 THEN false
+              ELSE true
+            END
+          ) as valida
+        FROM iscrizioni AS isc
+        INNER JOIN appelli AS a ON a.codice = isc.appello
+        INNER JOIN insegnamenti i ON a.insegnamento = i.codice
+        INNER JOIN utenti AS udoc ON udoc.id = i.responsabile
+        INNER JOIN utenti AS ustu ON ustu.id = isc.studente
+        INNER JOIN studenti AS s ON s.id = isc.studente
+        AND isc.voto IS NOT NULL
+        ORDER BY isc.studente, i.codice, a.data;
+
+    END;
+  $$;
+
 -- restituisce tutti gli insegnamenti di cui un docente è responsabile
 CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
   _id uuid
@@ -459,58 +511,6 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
         WHERE isc.studente = _id
         AND isc.voto IS NOT NULL
         ORDER BY i.codice, a.data;
-
-    END;
-  $$;
-
--- restituisce tutte le valutazioni e le carriere
-CREATE OR REPLACE FUNCTION get_valutazioni_per_segretario ()
-  RETURNS TABLE (
-    __appello uuid,
-    __insegnamento VARCHAR(6),
-    __nome_insegnamento TEXT,
-    __data DATE,
-    __docente uuid,
-    __nome_docente TEXT,
-    __studente uuid,
-    __nome_studente TEXT,
-    __matricola_studente CHAR(6),
-    __voto INTEGER,
-    __valida BOOLEAN
-  )
-  LANGUAGE plpgsql
-  AS $$
-    BEGIN
-
-      SET search_path TO unimia;
-
-      RETURN QUERY
-        SELECT isc.appello, a.insegnamento, i.nome, a.data,
-          i.responsabile, CONCAT(udoc.nome, ' ', udoc.cognome),
-          isc.studente, CONCAT(ustu.nome, ' ', ustu.cognome), s.matricola,
-          isc.voto,
-          (
-            CASE
-              WHEN EXISTS (
-                SELECT *
-                FROM iscrizioni AS isc2
-                INNER JOIN appelli a2 on isc2.appello = a2.codice
-                WHERE isc2.studente = isc.studente
-                AND a2.insegnamento = a.insegnamento
-                AND a2.data > a.data
-              ) THEN false
-              WHEN isc.voto < 18 THEN false
-              ELSE true
-            END
-          ) as valida
-        FROM iscrizioni AS isc
-        INNER JOIN appelli AS a ON a.codice = isc.appello
-        INNER JOIN insegnamenti i ON a.insegnamento = i.codice
-        INNER JOIN utenti AS udoc ON udoc.id = i.responsabile
-        INNER JOIN utenti AS ustu ON ustu.id = isc.studente
-        INNER JOIN studenti AS s ON s.id = isc.studente
-        AND isc.voto IS NOT NULL
-        ORDER BY isc.studente, i.codice, a.data;
 
     END;
   $$;
