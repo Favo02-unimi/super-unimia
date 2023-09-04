@@ -144,7 +144,8 @@ CREATE OR REPLACE FUNCTION controllo_appelli_per_anno_func()
       INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
       WHERE i.corso_di_laurea = _cdl
       AND i.anno = _anno
-      AND a.data = NEW.data;
+      AND a.data = NEW.data
+      AND a.codice != NEW.codice;
 
       IF _appelli >= 1 THEN
         RAISE EXCEPTION 'Sono già presenti appelli in questa giornata';
