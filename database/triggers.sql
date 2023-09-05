@@ -107,6 +107,7 @@ CREATE OR REPLACE FUNCTION controllo_numero_insegnamenti_per_docente_func()
       SELECT count(*)
       FROM insegnamenti AS i
       WHERE i.responsabile = NEW.responsabile
+      AND i.codice != NEW.codice
       INTO _numero_insegnamenti;
 
       IF _numero_insegnamenti >= 3 THEN
@@ -122,6 +123,49 @@ CREATE OR REPLACE TRIGGER controllo_numero_insegnamenti_per_docente
   ON insegnamenti
   FOR EACH ROW
   EXECUTE PROCEDURE controllo_numero_insegnamenti_per_docente_func();
+
+-- controlla che le propedeuticità non siano cicliche
+CREATE OR REPLACE FUNCTION controllo_propedeuticita_cicliche_func()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _ciclici INTEGER;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      IF NEW.insegnamento_propedeutico = NEW.insegnamento THEN
+        raise exception 'È presente una propedeuticità ciclica';
+      END IF;
+
+      WITH RECURSIVE propedeutici AS (
+          -- non-recursive term
+          SELECT p.insegnamento_propedeutico
+          FROM propedeuticita AS p
+          WHERE insegnamento = NEW.insegnamento_propedeutico
+        UNION
+          -- recursive term
+          SELECT p2.insegnamento_propedeutico
+          FROM propedeutici AS p
+          INNER JOIN propedeuticita AS p2 ON p.insegnamento_propedeutico = p2.insegnamento
+      )
+      SELECT count(*) INTO _ciclici
+      FROM propedeutici AS p
+      WHERE p.insegnamento_propedeutico = NEW.insegnamento;
+
+      IF _ciclici > 0 THEN
+        raise exception 'È presente una propedeuticità ciclica';
+      END IF;
+
+      RETURN NEW;
+
+    END;
+  $$;
+CREATE OR REPLACE TRIGGER controllo_propedeuticita_cicliche
+  BEFORE  INSERT OR UPDATE
+  ON propedeuticita
+  FOR EACH ROW
+  EXECUTE PROCEDURE controllo_propedeuticita_cicliche_func();
 
 -- controlla che non esistano più appelli dello corso di laurea dello stesso corso alla creazione di un appello
 CREATE OR REPLACE FUNCTION controllo_appelli_per_anno_func()
