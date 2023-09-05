@@ -317,18 +317,25 @@ CREATE OR REPLACE PROCEDURE new_insegnamento (
   _nome TEXT,
   _descrizione TEXT,
   _anno ANNO_INSEGNAMENTO,
-  _responsabile uuid
+  _responsabile uuid,
+  _propedeuiticita VARCHAR(6)[]
 )
   LANGUAGE plpgsql
   AS $$
-    DECLARE _id uuid;
+    DECLARE _propedeutico VARCHAR(6);
     BEGIN
 
       SET search_path TO unimia;
 
       INSERT INTO insegnamenti(codice, corso_di_laurea, nome, descrizione, anno, responsabile)
       VALUES (_codice, _corso_di_laurea, _nome, _descrizione, _anno, _responsabile);
-      
+
+      IF _propedeuiticita IS NOT NULL THEN
+        FOREACH _propedeutico IN ARRAY _propedeuiticita LOOP
+          INSERT INTO propedeuticita VALUES (_codice, _propedeutico);
+        END LOOP;
+      END IF;
+
     END;
   $$;
 
@@ -341,10 +348,12 @@ CREATE OR REPLACE PROCEDURE edit_insegnamento (
   _nome TEXT,
   _descrizione TEXT,
   _anno ANNO_INSEGNAMENTO,
-  _responsabile uuid
+  _responsabile uuid,
+  _propedeuiticita VARCHAR(6)[]
 )
   LANGUAGE plpgsql
   AS $$
+    DECLARE _propedeutico VARCHAR(6);
     BEGIN
 
       SET search_path TO unimia;
@@ -357,6 +366,15 @@ CREATE OR REPLACE PROCEDURE edit_insegnamento (
         anno = _anno,
         responsabile = _responsabile
       WHERE codice = _codice;
+
+      DELETE FROM propedeuticita AS p
+      WHERE p.insegnamento = _codice;
+
+      IF _propedeuiticita IS NOT NULL THEN
+        FOREACH _propedeutico IN ARRAY _propedeuiticita LOOP
+          INSERT INTO propedeuticita VALUES (COALESCE(NULLIF(_new_codice, ''), _codice), _propedeutico);
+        END LOOP;
+      END IF;
 
     END;
   $$;
