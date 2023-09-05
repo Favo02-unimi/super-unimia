@@ -26,9 +26,9 @@
     <?php
 
       if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.edit_insegnamento($1, $2, $3, $4, $5, $6, $7);";
+        $qry = "CALL unimia.edit_insegnamento($1, $2, $3, $4, $5, $6, $7, $8);";
         $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["codice"], $_POST["new_codice"], $_POST["corso_di_laurea"], $_POST["nome"], $_POST["descrizione"], $_POST["anno"], $_POST["responsabile"]));
+        $res = pg_execute($con, "", array($_POST["codice"], $_POST["new_codice"], $_POST["corso_di_laurea"], $_POST["nome"], $_POST["descrizione"], $_POST["anno"], $_POST["responsabile"], ToPostgresArray($_POST["propedeuticita"])));
 
         if (!$res): ?>
           <div class="notification is-danger is-light mt-6">
@@ -68,7 +68,7 @@
       <div class="field">
         <div class="control has-icons-left">
           <div class="select is-fullwidth">
-            <select name="corso_di_laurea">
+            <select name="corso_di_laurea" onchange="generaInsegnamenti(this.value, false)">
               <option value="<?php echo $_POST["corso_di_laurea"] ?>"><?php echo $_POST["corso_di_laurea"] ?> - <?php echo $_POST["nome_corso_di_laurea"] ?></option>
               <?php
                 $qry = "SELECT __codice, __nome FROM unimia.get_corsi_di_laurea()";
@@ -148,6 +148,47 @@
           </div>
         </div>
       </div>
+
+      <label class="label mt-5">Propedeuticità</label>
+      <div class="field">
+        <div class="control has-icons-left">
+          <div class="select is-fullwidth is-multiple">
+            <select name="propedeuticita[]" multiple>
+              <!-- populated by ajax -->
+              <?php
+              if ($_POST["propedeuticita"] != ""):
+                foreach (explode(", ", $_POST["propedeuticita"]) as $prop):
+              ?>
+                <option selected><?php echo $prop; ?></options>
+              <?php endforeach; endif; ?>
+            </select>
+          </div>
+          <div class="icon is-small is-left">
+            <i class="fa-solid fa-book"></i>
+          </div>
+        </div>
+        <p class="help">È possibile selezionare più di un insegnamento utilizzando CTRL.</p>
+      </div>
+
+      <script>
+        function generaInsegnamenti(cdl, isAppend) {
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              if (isAppend) {
+                document.querySelector("select[name='propedeuticita[]']").insertAdjacentHTML('beforeend', this.responseText);
+              }
+              else {
+                document.querySelector("select[name='propedeuticita[]']").innerHTML = this.responseText;
+              }
+            }
+          };
+          xmlhttp.open("GET", `ajax_insegnamenti.php?cdl=${cdl}`, true);
+          xmlhttp.send();
+        }
+
+        generaInsegnamenti(document.querySelector("select[name='corso_di_laurea']").value, true)
+      </script>
 
       <div class="field mt-5">
         <p class="control">

@@ -21,7 +21,7 @@
 
   ?>
 
-  <div class="container is-max-widescreen box">
+  <div class="container box">
 
     <span class="icon-text mb-4">
       <span class="icon is-large">
@@ -45,6 +45,7 @@
           <th class="has-text-centered">Descrizione</th>
           <th class="has-text-centered">Anno</th>
           <th class="has-text-centered">Responsabile</th>
+          <th class="has-text-centered">Propedeuticità</th>
           <th class="has-text-centered" colspan="2">Controlli</th>
         </tr>
       </thead>
@@ -52,7 +53,7 @@
       <tbody>
         <?php
 
-        $qry = "SELECT __codice, __corso_di_laurea, __nome_corso_di_laurea, __nome, __descrizione, __anno, __responsabile, __nome_responsabile, __email_responsabile FROM unimia.get_insegnamenti()";
+        $qry = "SELECT __codice, __corso_di_laurea, __nome_corso_di_laurea, __nome, __descrizione, __anno, __responsabile, __nome_responsabile, __email_responsabile, __propedeuticita FROM unimia.get_insegnamenti()";
         $res = pg_prepare($con, "", $qry);
         $res = pg_execute($con, "", array());
 
@@ -63,7 +64,7 @@
           $curCdl = $row["__corso_di_laurea"];
         ?>
           <tr>
-            <td colspan="8" class="has-text-centered has-text-weight-bold"><?php echo $row["__corso_di_laurea"] ?> - <?php echo $row["__nome_corso_di_laurea"] ?></td>
+            <td colspan="9" class="has-text-centered has-text-weight-bold"><?php echo $row["__corso_di_laurea"] ?> - <?php echo $row["__nome_corso_di_laurea"] ?></td>
           </tr>
         <?php endif ?>
           <tr>
@@ -73,6 +74,7 @@
             <td><?php echo $row["__descrizione"] ?></td>
             <td><?php echo $row["__anno"] ?></td>
             <td><?php echo $row["__nome_responsabile"] ?> <br> <?php echo $row["__email_responsabile"] ?></td>
+            <td><?php echo $row["__propedeuticita"] == "" ? "-" : $row["__propedeuticita"] ?></td>
             <td>
               <form method="post" action="modifica_insegnamento.php">
                 <input type="hidden" name="codice" value="<?php echo $row["__codice"] ?>">
@@ -84,6 +86,7 @@
                 <input type="hidden" name="responsabile" value="<?php echo $row["__responsabile"] ?>">
                 <input type="hidden" name="nome_responsabile" value="<?php echo $row["__nome_responsabile"] ?>">
                 <input type="hidden" name="email_responsabile" value="<?php echo $row["__email_responsabile"] ?>">
+                <input type="hidden" name="propedeuticita" value="<?php echo $row["__propedeuticita"] ?>">
                 <button class="button is-link is-small">Modifica</button>
               </form>
             </td>
