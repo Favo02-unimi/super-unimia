@@ -24,4 +24,20 @@ function ParseError($error) {
   return substr($error, $startPos + 7, min($endPos1, $endPos2) - $startPos - 8);
 }
 
+function ToPostgresArray($arr) {
+  $result = array();
+  foreach ($arr as $t) {
+    if (is_array($t)) {
+      $result[] = ToPostgresArray($t);
+    }
+    else {
+      $t = str_replace('"', '\\"', $t); // escape double quote
+      if (! is_numeric($t)) // quote only non-numeric values
+        $t = '"' . $t . '"';
+      $result[] = $t;
+    }
+  }
+  return '{' . implode(",", $result) . '}';
+}
+
 ?>
