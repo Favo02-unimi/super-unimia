@@ -79,9 +79,9 @@
       <strong>Gestione iscrizioni</strong>
     </a>
 
-    <a href="visualizza_carriere.php" class="block button is-link is-outlined is-fullwidth">
+    <a href="gestione_valutazioni.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-marker fa-xl"></i></span>
-      <strong>Visualizza carriere studenti</strong>
+      <strong>Gestione valutazioni e Carriere</strong>
     </a>
 
   </div>
