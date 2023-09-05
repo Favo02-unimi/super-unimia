@@ -211,7 +211,8 @@ CREATE OR REPLACE FUNCTION get_insegnamenti ()
     __anno ANNO_INSEGNAMENTO,
     __responsabile uuid,
     __nome_responsabile TEXT,
-    __email_responsabile TEXT
+    __email_responsabile TEXT,
+    __propedeuticita TEXT
   )
   LANGUAGE plpgsql
   AS $$
@@ -220,11 +221,36 @@ CREATE OR REPLACE FUNCTION get_insegnamenti ()
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(u.nome, ' ', u.cognome), u.email
+        SELECT i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(u.nome, ' ', u.cognome), u.email, string_agg(insegnamento_propedeutico, ', ')
         FROM insegnamenti AS i
         INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = i.corso_di_laurea
         INNER JOIN docenti AS d ON d.id = i.responsabile
         INNER JOIN utenti AS u ON d.id = u.id
+        LEFT JOIN propedeuticita AS p ON p.insegnamento = i.codice
+        GROUP BY i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(u.nome, ' ', u.cognome), u.email
+        ORDER BY i.corso_di_laurea, i.anno, i.codice;
+
+    END;
+  $$;
+
+-- restituisce tutti gli insegnamenti per corso di laurea
+CREATE OR REPLACE FUNCTION get_insegnamenti_per_corso_di_laurea (
+  _corso_di_laurea VARCHAR(6)
+)
+  RETURNS TABLE (
+    __codice VARCHAR(6),
+    __nome TEXT
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT i.codice, i.nome
+        FROM insegnamenti AS i
+        WHERE i.corso_di_laurea = _corso_di_laurea
         ORDER BY i.corso_di_laurea, i.anno, i.codice;
 
     END;
@@ -364,7 +390,8 @@ CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
     __nome_corso_di_laurea TEXT,
     __nome TEXT,
     __descrizione TEXT,
-    __anno ANNO_INSEGNAMENTO
+    __anno ANNO_INSEGNAMENTO,
+    __propedeuticita TEXT
   )
   LANGUAGE plpgsql
   AS $$
@@ -373,10 +400,12 @@ CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno
+        SELECT i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno, string_agg(insegnamento_propedeutico, ', ')
         FROM insegnamenti AS i
         INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = i.corso_di_laurea
+        LEFT JOIN propedeuticita AS p ON p.insegnamento = i.codice
         WHERE i.responsabile = _id
+        GROUP BY i.codice, i.corso_di_laurea, cdl.nome, i.nome, i.descrizione, i.anno
         ORDER BY i.corso_di_laurea, i.anno, i.codice;
 
     END;
