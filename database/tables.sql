@@ -53,3 +53,9 @@ CREATE TABLE iscrizioni (
   voto INTEGER CHECK (voto BETWEEN 0 AND 31) ,
   PRIMARY KEY(appello, studente)
 );
+
+CREATE TABLE propedeuticita (
+  insegnamento VARCHAR(6) NOT NULL REFERENCES insegnamenti(codice) ON UPDATE CASCADE,
+  insegnamento_propedeutico VARCHAR(6) NOT NULL REFERENCES insegnamenti(codice) ON UPDATE CASCADE,
+  PRIMARY KEY(insegnamento, insegnamento_propedeutico)
+);
