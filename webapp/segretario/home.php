@@ -74,6 +74,11 @@
       <strong>Gestione appelli</strong>
     </a>
 
+    <a href="gestione_iscrizioni.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-users fa-xl"></i></span>
+      <strong>Gestione iscrizioni</strong>
+    </a>
+
     <a href="visualizza_carriere.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-marker fa-xl"></i></span>
       <strong>Visualizza carriere studenti</strong>
