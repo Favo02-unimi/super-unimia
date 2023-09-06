@@ -600,6 +600,7 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
                 WHERE isc2.studente = _id
                 AND a2.insegnamento = a.insegnamento
                 AND a2.data > a.data
+                AND isc2.voto IS NOT NULL
               ) THEN false
               WHEN isc.voto < 18 THEN false
               ELSE true
