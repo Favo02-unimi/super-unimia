@@ -87,7 +87,7 @@
       <label class="label mt-5">Ultimo voto</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["__ultimo_voto"] == "" ? "Mai sostenuto" : $_POST["__ultimo_voto"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["ultimo_voto"] == "" ? "Mai sostenuto" : $_POST["ultimo_voto"] ?>" required disabled>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-marker"></i>
           </span>
