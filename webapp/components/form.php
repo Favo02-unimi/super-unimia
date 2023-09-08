@@ -17,11 +17,16 @@ $inputs = array(
     type=>"hidden",
     name=>"",
     value=>""
-  ).
+  ),
   array(
     type=>"select",
-    ...
-  )
+    name=>"",
+    array(
+      "val"=>"val"
+    )
+    icon=>"",
+    help=>""
+    ),
   array(
     type=>"text",
     label=>"",
@@ -70,7 +75,21 @@ require("navbar.php");
         <input type="hidden" name="<?= $input["name"] ?>" value="<?= $input["value"] ?>" required readonly>
 
       <?php elseif ($input["type"] == "select"): ?>
-        <!-- select -->
+        <div class="field">
+          <div class="control has-icons-left">
+            <div class="select is-fullwidth">
+              <select name="<?= $input["name"] ?>">
+                <?php foreach ($input["options"] as $value=>$text): ?>
+                  <option value="<?= $value ?>"><?= $text ?></option>
+                <?php endforeach ?>
+              </select>
+            </div>
+            <div class="icon is-small is-left">
+              <i class="fa-solid <?= $input["icon"] ?>"></i>
+            </div>
+          </div>
+          <p class="help"><?= $input["help"] ?></p>
+        </div>
 
       <?php else: ?>
         <div class="field">
