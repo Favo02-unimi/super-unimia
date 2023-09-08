@@ -7,6 +7,11 @@ $fa_icon = "";
 $title = "";
 $subtitle = "";
 
+$create = array(
+  "target"=>"",
+  "text"=>""
+)
+
 $table_headers = array("", "", array(colspan=>"", text=>""), ...);
 
 $rows = array(
@@ -41,6 +46,12 @@ require("navbar.php");
     <h1 class="title mt-2"><?= $title ?></h1>
   </span>
   <h2 class="subtitle"><?= $subtitle ?></h2>
+
+  <a href="<?= $create["target"] ?>" class="block button is-link is-outlined is-fullwidth">
+    <span class="icon is-small"><i class="fa-solid <?= $fa_icon ?> fa-xl"></i></span>
+    <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
+    <strong><?= $create["text"] ?></strong>
+  </a>
 
   <table class="table is-fullwidth is-hoverable has-text-centered">
     <thead>
