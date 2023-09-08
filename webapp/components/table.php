@@ -27,8 +27,8 @@ $rows = array(
 require("../scripts/redirector.php");
   
 // head and navbar
-require("../head.php");
-require("../navbar.php");
+require("head.php");
+require("navbar.php");
 
 ?>
 
@@ -99,4 +99,4 @@ require("../navbar.php");
 
 </div>
   
-<?php require("../footer.php"); ?>
+<?php require("footer.php"); ?>

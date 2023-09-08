@@ -76,7 +76,7 @@
     
   </div>
 
-  <?php require("footer.php"); ?>
+  <?php require("components/footer.php"); ?>
 
 </body>
 </html>

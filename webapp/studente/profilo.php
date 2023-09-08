@@ -19,7 +19,7 @@
     Redirect("index.php");
   }
 
-  require("../navbar.php");
+  require("../components/navbar.php");
 
   ?>
 
@@ -44,7 +44,7 @@
 
   </div>
     
-  <?php require("../footer.php"); ?>
+  <?php require("../components/footer.php"); ?>
 
 </body>
 </html>
