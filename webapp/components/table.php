@@ -63,7 +63,7 @@ require("navbar.php");
         <?php if ($row["separator"] != $cur_separator): // separator tr ?>
           <?php $cur_separator = $row["separator"] ?>
           <tr class="invalid">
-            <td colspan="<?= count($table_headers) ?>" class="has-text-centered has-text-weight-bold">
+            <td colspan="100" class="has-text-centered has-text-weight-bold">
               <?= $row["separator_text"] ?>
             </td>
           </tr>
