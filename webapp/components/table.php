@@ -80,9 +80,9 @@ require("../navbar.php");
               <td>
                 <form method="POST" action="<?= $td["target"] ?>">
                   <?php foreach($td["params"] as $name=>$param): ?>
-                    <input type="hidden" name="<?= $name ?>" value="<?= $param ?>">
+                    <input type="hidden" name="<?= $name ?>" value="<?= $param ?>" readonly>
                   <?php endforeach ?>
-                  <button class="button <?= $td["class"] ?> is-small" type="submit" required readonly>
+                  <button class="button <?= $td["class"] ?> is-small" type="submit" required>
                     <?= $td["submit"] ?>  
                   </button>
                 </form>
