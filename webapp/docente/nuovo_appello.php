@@ -1,120 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="../styles/index.css">
-  <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Nuovo appello - SuperUnimia</title>
-</head>
-<body class="has-background-dark has-text-light">
+<?php
 
-  <?php
+require_once("../scripts/utils.php");
 
-  require_once("../scripts/utils.php");
+if (isset($_POST["submit"])) {
+  $qry = "CALL unimia.new_appello($1, $2, $3, $4);";
+  $res = pg_prepare($con, "", $qry);
+  $res = pg_execute($con, "", array($_POST["insegnamento"], $_POST["data"], $_POST["ora"], $_POST["luogo"]));
 
-  $CUR_PAGE = "docente";
-  require("../scripts/redirector.php");
+  if (!$res) {
+    $error = ParseError(pg_last_error());
+  }
+  else {
+    unset($error);
+    $_SESSION["feedback"] = "Appello creato con successo.";
+    Redirect("home.php");
+  }
+}
 
-  require("../components/navbar.php");
+$CUR_PAGE = "docente";
+$fa_icon = "fa-calendar-day";
+$title = "Nuovo appello";
+$subtitle = "";
 
-  ?>
+$class = "is-link";
+$help = "";
 
-  <div class="container is-max-desktop">
+// options query
+$qry = "SELECT __codice, __nome, __nome_corso_di_laurea FROM unimia.get_insegnamenti_per_docente($1)";
+$res = pg_prepare($con, "", $qry);
+$res = pg_execute($con, "", array($_SESSION["userid"]));
 
-    <?php
+$options = array();
+while ($row = pg_fetch_assoc($res)) {
+  $options[$row["__codice"]] = $row["__nome_corso_di_laurea"]." - ".$row["__codice"]." - ".$row["__nome"];
+}
 
-      if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.new_appello($1, $2, $3, $4);";
-        $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["insegnamento"], $_POST["data"], $_POST["ora"], $_POST["luogo"]));
+$inputs = array(
+  array(
+    "type"=>"select",
+    "name"=>"insegnamento",
+    "options"=>$options,
+    "icon"=>"fa-book"
+  ),
+  array(
+    "type"=>"date",
+    "label"=>"Data",
+    "name"=>"data",
+    "value"=>"",
+    "placeholder"=>"",
+    "required"=>"required",
+    "icon"=>"fa-calendar-days",
+    "help"=>"È possibile creare solo appelli con data futura."
+  ),
+  array(
+    "type"=>"time",
+    "label"=>"Ora",
+    "name"=>"ora",
+    "value"=>"",
+    "placeholder"=>"",
+    "required"=>"required",
+    "icon"=>"fa-clock",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Luogo",
+    "name"=>"luogo",
+    "value"=>$_POST["luogo"],
+    "placeholder"=>"Luogo",
+    "required"=>"required",
+    "icon"=>"fa-location-dot",
+    "help"=>""
+  )
+);
 
-        if (!$res): ?>
-          <div class="notification is-danger is-light mt-6">
-            <strong>Errore durante la creazione:</strong>
-            <?php echo ParseError(pg_last_error()); ?>.
-          </div>
-        <?php else: 
-          $_SESSION["feedback"] = "Appello creato con successo.";
-          Redirect("home.php");
-        endif;
-      }
-    ?>
-    
-    <form class="box p-6" action="" method="post">
+require("../components/form.php");
 
-      <span class="icon-text">
-        <span class="icon is-large">
-          <i class="fa-solid fa-calendar-day fa-2xl"></i>
-        </span>
-        <h1 class="title mt-2">Nuovo appello</h1>
-      </span>
-
-      <label class="label mt-5">Insegnamento</label>
-      <div class="field">
-        <div class="control has-icons-left">
-          <div class="select is-fullwidth">
-            <select name="insegnamento">
-              <?php
-                $qry = "SELECT __codice, __nome, __nome_corso_di_laurea FROM unimia.get_insegnamenti_per_docente($1)";
-                $res = pg_prepare($con, "", $qry);
-                $res = pg_execute($con, "", array($_SESSION["userid"]));
-        
-                while ($row = pg_fetch_assoc($res)):
-              ?>
-                <option value="<?php echo $row["__codice"] ?>"><?php echo $row["__nome_corso_di_laurea"] ?> - <?php echo $row["__codice"] ?> - <?php echo $row["__nome"] ?></option>
-              <?php endwhile ?>
-            </select>
-          </div>
-          <div class="icon is-small is-left">
-            <i class="fa-solid fa-book"></i>
-          </div>
-        </div>
-      </div>
-
-      <label class="label mt-5">Data</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="date" name="data" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-calendar-days"></i>
-          </span>
-        </p>
-        <p class="help">È possibile create appelli con date furute.</p>
-      </div>
-
-      <label class="label mt-5">Ora</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="time" name="ora" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-clock"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Luogo</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" name="luogo" placeholder="Luogo" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-location-dot"></i>
-          </span>
-        </p>
-      </div>
-
-      <div class="field mt-5">
-        <p class="control">
-          <input type="submit" name="submit" value="Crea appello" class="button is-link is-fullwidth is-medium">
-        </p>
-      </div>
-
-    </form>
-  
-  </div>
-    
-  <?php require("../components/footer.php"); ?>
-
-</body>
-</html>
+?>
