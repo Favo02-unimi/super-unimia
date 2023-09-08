@@ -57,7 +57,7 @@
       <label class="label mt-5">Insegnamento</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["insegnamento"] ?> - <?php echo $_POST["nome_insegnamento"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["insegnamento"] ?> - <?php echo $_POST["nome_insegnamento"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-book"></i>
           </span>
@@ -67,7 +67,7 @@
       <label class="label mt-5">Data</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["data"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["data"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-calendar-days"></i>
           </span>
@@ -77,7 +77,7 @@
       <label class="label mt-5">Matricola</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["matricola"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["matricola"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-barcode"></i>
           </span>
@@ -87,7 +87,7 @@
       <label class="label mt-5">Nome</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["nome"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["nome"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-align-center"></i>
           </span>
@@ -97,7 +97,7 @@
       <label class="label mt-5">Email</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["email"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["email"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-envelope"></i>
           </span>

@@ -38,7 +38,7 @@
     foreach ($row as $key => $value): ?>
 
       <label class="label mt-5"><?php echo ucfirst(str_replace("_", " ", substr($key, 2))); ?>:</label>
-      <input class="input" type="text" value="<?php echo $value ?>" disabled>
+      <input class="input" type="text" value="<?php echo $value ?>" readonly>
 
     <?php endforeach; ?>
 

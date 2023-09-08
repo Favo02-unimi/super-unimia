@@ -48,3 +48,17 @@ body {
 .invalid:hover {
   background-color: rgba(236, 236, 236) !important;
 }
+
+[readonly],
+[readonly]:focus {
+  cursor: not-allowed;
+  border: none;
+  background-color: #f5f5f5;
+  border-color: #f5f5f5;
+  box-shadow: none;
+  color: #7a7a7a !important;
+}
+
+[readonly]:focus ~ .icon {
+  color: #dbdbdb !important;
+}

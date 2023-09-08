@@ -56,7 +56,7 @@
       <label class="label mt-5">Insegnamento</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["insegnamento"] ?> - <?php echo $_POST["nome_insegnamento"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["insegnamento"] ?> - <?php echo $_POST["nome_insegnamento"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-book"></i>
           </span>
@@ -66,7 +66,7 @@
       <label class="label mt-5">Data</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["data"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["data"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-calendar-days"></i>
           </span>
@@ -76,7 +76,7 @@
       <label class="label mt-5">Ora</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["ora"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["ora"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-clock"></i>
           </span>
@@ -86,7 +86,7 @@
       <label class="label mt-5">Luogo</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["luogo"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["luogo"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-location-dot"></i>
           </span>
@@ -96,7 +96,7 @@
       <label class="label mt-5">Ultimo voto</label>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["ultimo_voto"] == "" ? "Mai sostenuto" : $_POST["ultimo_voto"] ?>" required disabled>
+          <input class="input" type="text" value="<?php echo $_POST["ultimo_voto"] == "" ? "Mai sostenuto" : $_POST["ultimo_voto"] ?>" required readonly>
           <span class="icon is-small is-left">
             <i class="fa-solid fa-marker"></i>
           </span>
