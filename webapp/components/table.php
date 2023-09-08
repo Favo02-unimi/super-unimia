@@ -47,11 +47,13 @@ require("navbar.php");
   </span>
   <h2 class="subtitle"><?= $subtitle ?></h2>
 
-  <a href="<?= $create["target"] ?>" class="block button is-link is-outlined is-fullwidth">
-    <span class="icon is-small"><i class="fa-solid <?= $fa_icon ?> fa-xl"></i></span>
-    <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
-    <strong><?= $create["text"] ?></strong>
-  </a>
+  <?php if (isset($create)): ?>
+    <a href="<?= $create["target"] ?>" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid <?= $fa_icon ?> fa-xl"></i></span>
+      <span class="icon is-small"><i class="fa-regular fa-square-plus"></i></span>
+      <strong><?= $create["text"] ?></strong>
+    </a>
+  <?php endif ?>
 
   <table class="table is-fullwidth is-hoverable has-text-centered">
     <thead>
