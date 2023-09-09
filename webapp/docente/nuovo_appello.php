@@ -34,6 +34,7 @@ $options = array();
 while ($row = pg_fetch_assoc($res)) {
   $options[$row["__codice"]] = $row["__nome_corso_di_laurea"]." - ".$row["__codice"]." - ".$row["__nome"];
 }
+$selected = array();
 
 $inputs = array(
   array(
@@ -41,6 +42,7 @@ $inputs = array(
     "label"=>"Insegnamento",
     "name"=>"insegnamento",
     "options"=>$options,
+    "selected"=>$selected,
     "icon"=>"fa-book"
   ),
   array(

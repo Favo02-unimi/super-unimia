@@ -80,6 +80,9 @@ require("navbar.php");
           <div class="control has-icons-left">
             <div class="select is-fullwidth">
               <select name="<?= $input["name"] ?>">
+                <?php foreach ($input["selected"] as $value=>$text): ?>
+                  <option value="<?= $value ?>" selected><?= $text ?></option>
+                <?php endforeach ?>
                 <?php foreach ($input["options"] as $value=>$text): ?>
                   <option value="<?= $value ?>"><?= $text ?></option>
                 <?php endforeach ?>
