@@ -38,6 +38,7 @@ while ($row = pg_fetch_assoc($res)) {
 $inputs = array(
   array(
     "type"=>"select",
+    "label"=>"Insegnamento",
     "name"=>"insegnamento",
     "options"=>$options,
     "icon"=>"fa-book"

@@ -76,6 +76,7 @@ require("navbar.php");
 
       <?php elseif ($input["type"] == "select"): ?>
         <div class="field">
+          <label class="label mt-5"><?= $input["label"] ?></label>
           <div class="control has-icons-left">
             <div class="select is-fullwidth">
               <select name="<?= $input["name"] ?>">
