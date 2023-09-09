@@ -13,8 +13,8 @@
     </div>
     <div class="navbar-start ml-4">
       <p class="navbar-item">
-        Autenticato come <?php echo $_SESSION["usertype"]?>:
-        <strong>&nbsp;<?php echo $_SESSION["username"]?></strong>
+        Autenticato come <?= $_SESSION["usertype"]  ?>:
+        <strong>&nbsp;<?= $_SESSION["username"] ?></strong>
       </p>
     </div>
 

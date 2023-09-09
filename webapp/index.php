@@ -22,7 +22,7 @@
 
     <?php if (isset($_SESSION["feedback"])): ?>
       <div class="notification is-danger is-light mt-6">
-        <strong><?php echo $_SESSION["feedback"]; unset($_SESSION["feedback"]) ?></strong>
+        <strong><?= $_SESSION["feedback"] ?><?php unset($_SESSION["feedback"]) ?></strong>
       </div>
     <?php endif; ?>
 

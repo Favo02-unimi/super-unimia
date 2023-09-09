@@ -28,8 +28,8 @@ require("../components/navbar.php");
 
     foreach ($row as $key => $value): ?>
 
-      <label class="label mt-5"><?php echo ucfirst(str_replace("_", " ", substr($key, 2))); ?>:</label>
-      <input class="input" type="text" value="<?php echo $value ?>" readonly>
+      <label class="label mt-5"><?= ucfirst(str_replace("_", " ", substr($key, 2))) ?>:</label>
+      <input class="input" type="text" value="<?= $value ?>" readonly>
 
     <?php endforeach; ?>
 

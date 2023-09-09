@@ -13,6 +13,6 @@ $res = pg_execute($con, "", array($_GET["cdl"]));
 
 while ($row = pg_fetch_assoc($res)): 
   if (!in_array($row["__codice"], $selected)): ?>
-  <option value="<?php echo $row["__codice"] ?>"><?php echo $row["__codice"] ?> - <?php echo $row["__nome"] ?></option>
+  <option value="<?= $row["__codice"] ?>"><?= $row["__codice"] ?> - <?= $row["__nome"] ?></option>
   <?php endif ?>
 <?php endwhile ?>
