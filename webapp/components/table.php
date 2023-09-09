@@ -37,7 +37,7 @@ require("navbar.php");
 
 ?>
 
-<div class="container is-max-widescreen box">
+<div class="container is-fullhd box">
 
   <span class="icon-text mb-4">
     <span class="icon is-large">

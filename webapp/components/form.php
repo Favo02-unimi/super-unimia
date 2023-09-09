@@ -20,13 +20,17 @@ $inputs = array(
   ),
   array(
     type=>"select",
+    label=>"",
     name=>"",
-    array(
-      "val"=>"val"
+    options=>array(
+      "val"=>"text"
+    )
+    options=>array(
+      "val"=>"text"
     )
     icon=>"",
     help=>""
-    ),
+  ),
   array(
     type=>"text",
     label=>"",
