@@ -12,7 +12,9 @@ $res = pg_prepare($con, "", $qry);
 $res = pg_execute($con, "", array($_GET["cdl"]));
 
 while ($row = pg_fetch_assoc($res)): 
-  if (!in_array($row["__codice"], $selected)): ?>
-  <option value="<?= $row["__codice"] ?>"><?= $row["__codice"] ?> - <?= $row["__nome"] ?></option>
-  <?php endif ?>
-<?php endwhile ?>
+  if (in_array($row["__codice"], $selected)): ?>
+    <option value="<?= $row["__codice"] ?>" selected><?= $row["__codice"] ?> - <?= $row["__nome"] ?></option>
+  <?php else: ?>
+    <option value="<?= $row["__codice"] ?>"><?= $row["__codice"] ?> - <?= $row["__nome"] ?></option>
+  <?php endif;
+endwhile ?>

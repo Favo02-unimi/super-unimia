@@ -54,14 +54,6 @@ while ($row = pg_fetch_assoc($res)) {
 $selectedRes = array();
 $selectedRes[$_POST["responsabile"]] = $_POST["nome_responsabile"]." ".$_POST["email_responsabile"];
 
-// options propedeuticita
-$selectedProp = array();
-if ($_POST["propedeuticita"] != "" && !is_array($_POST["propedeuticita"])) {  
-  foreach (explode(", ", $_POST["propedeuticita"]) as $prop) {
-    $selectedProp[$prop] = $prop;
-  }
-}
-
 $inputs = array(
   array(
     "type"=>"hidden",
@@ -84,7 +76,7 @@ $inputs = array(
     "icon"=>"fa-graduation-cap",
     "options"=>$optionsCdl,
     "selected"=>$selectedCdl,
-    "onchange"=>"generaInsegnamenti(this.value, false)",
+    "onchange"=>"generaInsegnamenti(this.value)",
     "help"=>""
   ),
   array(
@@ -137,7 +129,7 @@ $inputs = array(
     "label"=>"Propedeuticità",
     "icon"=>"fa-user-tie",
     "options"=>array(),
-    "selected"=>$selectedProp,
+    "selected"=>array(),
     "help"=>"È possibile selezionare più di un insegnamento utilizzando CTRL."
   )
 );
@@ -147,21 +139,18 @@ require("../components/form.php");
 ?>
 
 <script>
-  function generaInsegnamenti(cdl, isAppend) {
+  function generaInsegnamenti(cdl) {
+    document.querySelector("select[name='propedeuticita[]']").innerHTML = "<option>Loading...</option>";
+
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        if (isAppend) {
-          document.querySelector("select[name='propedeuticita[]']").insertAdjacentHTML('beforeend', this.responseText);
-        }
-        else {
-          document.querySelector("select[name='propedeuticita[]']").innerHTML = this.responseText;
-        }
+        document.querySelector("select[name='propedeuticita[]']").innerHTML = this.responseText;
       }
     };
     xmlhttp.open("GET", `ajax_insegnamenti.php?cdl=${cdl}&sel=<?= $_POST["propedeuticita"] ?>`, true);
     xmlhttp.send();
   }
 
-  generaInsegnamenti(document.querySelector("select[name='corso_di_laurea']").value, true)
+  generaInsegnamenti(document.querySelector("select[name='corso_di_laurea']").value)
 </script>
