@@ -20,14 +20,17 @@ $inputs = array(
   ),
   array(
     type=>"select",
+    multiple=>"multiple",
+    ismultiple=>"is-multiple",
     label=>"",
     name=>"",
     options=>array(
       "val"=>"text"
-    )
+    ),
     options=>array(
       "val"=>"text"
-    )
+    ),
+    onchange=>"",
     icon=>"",
     help=>""
   ),
@@ -82,8 +85,8 @@ require("navbar.php");
         <div class="field">
           <label class="label mt-5"><?= $input["label"] ?></label>
           <div class="control has-icons-left">
-            <div class="select is-fullwidth">
-              <select name="<?= $input["name"] ?>">
+            <div class="select is-fullwidth <?= $input["ismultiple"] ?>">
+              <select name="<?= $input["name"] ?>" <?= $input["multiple"] ?> onchange="<?= $input["onchange"] ?>">
                 <?php foreach ($input["selected"] as $value=>$text): ?>
                   <option value="<?= $value ?>" selected><?= $text ?></option>
                 <?php endforeach ?>
