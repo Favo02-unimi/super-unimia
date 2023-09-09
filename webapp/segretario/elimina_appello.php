@@ -1,71 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="../styles/index.css">
-  <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Elimina appello - SuperUnimia</title>
-</head>
-<body class="has-background-dark has-text-light">
+<?php
 
-  <?php
+require_once("../scripts/utils.php");
 
-  require_once("../scripts/utils.php");
+if (isset($_POST["submit"])) {
+  $qry = "CALL unimia.delete_appello($1);";
+  $res = pg_prepare($con, "", $qry);
+  $res = pg_execute($con, "", array($_POST["codice"]));
 
-  $CUR_PAGE = "segretario";
-  require("../scripts/redirector.php");
+  if (!$res) {
+    $error = ParseError(pg_last_error());
+  }
+  else {
+    unset($error);
+    $_SESSION["feedback"] = "Appello eliminato con successo.";
+    Redirect("home.php");
+  }
+}
 
-  require("../components/navbar.php");
+$CUR_PAGE = "segretario";
+$fa_icon = "fa-calendar-day";
+$title = "Elimina appello";
+$subtitle = "";
 
-  ?>
+$class = "is-danger";
+$help = "";
 
-  <div class="container is-max-desktop">
+$inputs = array(
+  array(
+    "type"=>"hidden",
+    "name"=>"codice",
+    "value"=>$_POST["codice"]
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Corso di laurea",
+    "name"=>"nome_corso_di_laurea",
+    "value"=>$_POST["nome_corso_di_laurea"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-graduation-cap",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Insengamento",
+    "name"=>"nome_insegnamento",
+    "value"=>$_POST["nome_insegnamento"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-book",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Data",
+    "name"=>"data",
+    "value"=>$_POST["data"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-calendar-days",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Ora",
+    "name"=>"ora",
+    "value"=>$_POST["ora"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-clock",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Luogo",
+    "name"=>"luogo",
+    "value"=>$_POST["luogo"],
+    "readonly"=>"readonly",
+    "placeholder"=>"Luogo",
+    "icon"=>"fa-location-dot",
+    "help"=>""
+  )
+);
 
-    <?php
+require("../components/form.php");
 
-      if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.delete_appello($1);";
-        $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["codice"]));
-
-        if (!$res): ?>
-          <div class="notification is-danger is-light mt-6">
-            <strong>Errore durante la cancellazione:</strong>
-            <?php echo ParseError(pg_last_error()); ?>.
-          </div>
-        <?php else: 
-          $_SESSION["feedback"] = "Appello eliminato con successo.";
-          Redirect("home.php");
-        endif;
-      }
-
-    ?>
-
-      <form class="box p-6" action="" method="post">
-
-      <span class="icon-text">
-        <span class="icon is-large">
-          <i class="fa-solid fa-calendar-day fa-2xl"></i>
-        </span>
-        <h1 class="title mt-2">Elimina appello</h1>
-      </span>
-
-      <input class="input" type="hidden" name="codice" value="<?php echo $_POST["codice"] ?>" required>
-
-      <div class="field mt-5">
-        <p class="control">
-          <input type="submit" name="submit" value="Conferma cancellazione" class="button is-danger is-fullwidth is-medium">
-        </p>
-        <p class="help is-danger">È possibile cancellare un appello solo in caso non sia mai utilizzato (non risultino studenti iscritti e/o voti registrati).</p>
-      </div>
-
-    </form>
-
-  </div>
-
-  <?php require("../components/footer.php"); ?>
-    
-</body>
-</html>
+?>

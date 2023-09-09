@@ -1,111 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="../styles/index.css">
-  <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Elimina iscrizione - SuperUnimia</title>
-</head>
-<body class="has-background-dark has-text-light">
+<?php
 
-  <?php
+require_once("../scripts/utils.php");
 
-  require_once("../scripts/utils.php");
+if (isset($_POST["submit"])) {
+  $qry = "CALL unimia.disiscriviti_appello($1, $2);";
+  $res = pg_prepare($con, "", $qry);
+  $res = pg_execute($con, "", array($_POST["studente"], $_POST["appello"]));
 
-  $CUR_PAGE = "segretario";
-  require("../scripts/redirector.php");
+  if (!$res) {
+    $error = ParseError(pg_last_error());
+  }
+  else {
+    unset($error);
+    $_SESSION["feedback"] = "Iscrizione eliminata con successo.";
+    Redirect("home.php");
+  }
+}
 
-  require("../components/navbar.php");
+$CUR_PAGE = "segretario";
+$fa_icon = "fa-calendar-day";
+$title = "Cancella iscrizione appello";
+$subtitle = "";
 
-  ?>
+$class = "is-danger";
+$help = "";
 
-  <div class="container is-max-desktop">
+$inputs = array(
+  array(
+    "type"=>"hidden",
+    "name"=>"appello",
+    "value"=>$_POST["appello"]
+  ),
+  array(
+    "type"=>"hidden",
+    "name"=>"studente",
+    "value"=>$_POST["studente"]
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Corso di laurea",
+    "name"=>"nome_corso_di_laurea",
+    "value"=>$_POST["nome_corso_di_laurea"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-graduation-cap",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Insengamento",
+    "name"=>"nome_insegnamento",
+    "value"=>$_POST["nome_insegnamento"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-book",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Data",
+    "name"=>"data",
+    "value"=>$_POST["data"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-calendar-days",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Studente",
+    "name"=>"nome_studente",
+    "value"=>$_POST["nome_studente"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-user-graduate",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Matricola",
+    "name"=>"matricola",
+    "value"=>$_POST["matricola"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-id-card",
+    "help"=>""
+  )
+);
 
-    <?php
+require("../components/form.php");
 
-      if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.disiscriviti_appello($1, $2);";
-        $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["studente"], $_POST["codice"]));
-
-        if (!$res): ?>
-          <div class="notification is-danger is-light mt-6">
-            <strong>Errore durante la creazione:</strong>
-            <?php echo ParseError(pg_last_error()); ?>.
-          </div>
-        <?php else: 
-          $_SESSION["feedback"] = "Iscrizione eliminata con successo.";
-          Redirect("home.php");
-        endif;
-      }
-    ?>
-    
-    <form class="box p-6" action="" method="post">
-
-      <span class="icon-text">
-        <span class="icon is-large">
-          <i class="fa-solid fa-calendar-day fa-2xl"></i>
-        </span>
-        <h1 class="title mt-2">Cancella iscrizione appello</h1>
-      </span>
-
-      <input type="hidden" name="codice" value="<?php echo $_POST["appello"] ?>">
-      <input type="hidden" name="studente" value="<?php echo $_POST["studente"] ?>">
-
-      <label class="label mt-5">Insegnamento</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["insegnamento"] ?> - <?php echo $_POST["nome_insegnamento"] ?>" required readonly>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-book"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Studente</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["nome_studente"] ?>" required readonly>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-calendar-days"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Data</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["data"] ?>" required readonly>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-calendar-days"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Ultimo voto</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["ultimo_voto"] == "" ? "Mai sostenuto" : $_POST["ultimo_voto"] ?>" required readonly>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-marker"></i>
-          </span>
-        </p>
-        <p class="help">Questo voto (se presente) verrà sovrascritto dal risultato di questo appello.</p>
-      </div>
-
-      <div class="field mt-5">
-        <p class="control">
-          <input type="submit" name="submit" value="Disiscriviti appello" class="button is-danger is-fullwidth is-medium">
-        </p>
-      </div>
-
-    </form>
-  
-  </div>
-    
-  <?php require("../components/footer.php"); ?>
-
-</body>
-</html>
+?>

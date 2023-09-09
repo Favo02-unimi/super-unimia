@@ -1,71 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="../styles/index.css">
-  <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Elimina insegnamento - SuperUnimia</title>
-</head>
-<body class="has-background-dark has-text-light">
+<?php
 
-  <?php
+require_once("../scripts/utils.php");
 
-  require_once("../scripts/utils.php");
+if (isset($_POST["submit"])) {
+  $qry = "CALL unimia.delete_insegnamento($1);";
+  $res = pg_prepare($con, "", $qry);
+  $res = pg_execute($con, "", array($_POST["codice"]));
 
-  $CUR_PAGE = "segretario";
-  require("../scripts/redirector.php");
+  if (!$res) {
+    $error = ParseError(pg_last_error());
+  }
+  else {
+    unset($error);
+    $_SESSION["feedback"] = "Insegnamento eliminato con successo.";
+    Redirect("home.php");
+  }
+}
 
-  require("../components/navbar.php");
+$CUR_PAGE = "segretario";
+$fa_icon = "fa-book";
+$title = "Elimina insegnamento";
+$subtitle = "";
 
-  ?>
+$class = "is-danger";
+$help = "";
 
-  <div class="container is-max-desktop">
+$inputs = array(
+  array(
+    "type"=>"text",
+    "label"=>"Codice",
+    "name"=>"codice",
+    "value"=>$_POST["codice"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-barcode",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Corso di laurea",
+    "name"=>"corso_di_laurea",
+    "value"=>$_POST["corso_di_laurea"]." - ".$_POST["nome_corso_di_laurea"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-graduation-cap",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Nome",
+    "name"=>"nome",
+    "value"=>$_POST["nome"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-align-center",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Descrizione",
+    "name"=>"descrizione",
+    "value"=>$_POST["descrizione"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-align-justify",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Anno",
+    "name"=>"anno",
+    "value"=>$_POST["anno"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-calendar-days",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Responsabile",
+    "name"=>"nome_responsabile",
+    "value"=>$_POST["nome_responsabile"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-user-tie",
+    "help"=>""
+  )
+);
 
-    <?php
+require("../components/form.php");
 
-      if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.delete_insegnamento($1);";
-        $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["codice"]));
-
-        if (!$res): ?>
-          <div class="notification is-danger is-light mt-6">
-            <strong>Errore durante la cancellazione:</strong>
-            <?php echo ParseError(pg_last_error()); ?>.
-          </div>
-        <?php else: 
-          $_SESSION["feedback"] = "Insegnamento eliminato con successo.";
-          Redirect("home.php");
-        endif;
-      }
-
-    ?>
-
-      <form class="box p-6" action="" method="post">
-
-      <span class="icon-text">
-        <span class="icon is-large">
-          <i class="fa-solid fa-book fa-2xl"></i>
-        </span>
-        <h1 class="title mt-2">Elimina insegnamento</h1>
-      </span>
-
-      <input class="input" type="hidden" name="codice" value="<?php echo $_POST["codice"] ?>" required>
-
-      <div class="field mt-5">
-        <p class="control">
-          <input type="submit" name="submit" value="Conferma cancellazione" class="button is-danger is-fullwidth is-medium">
-        </p>
-        <p class="help is-danger">È possibile cancellare un insegnamento solo in caso non sia mai utilizzato (non abbia appelli associati). Utilizzare l'archivio per dismettere.</p>
-      </div>
-
-    </form>
-
-  </div>
-
-  <?php require("../components/footer.php"); ?>
-    
-</body>
-</html>
+?>

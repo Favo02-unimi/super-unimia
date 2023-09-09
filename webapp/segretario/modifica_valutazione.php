@@ -1,121 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="../styles/index.css">
-  <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Modifica valutazione - SuperUnimia</title>
-</head>
-<body class="has-background-dark has-text-light">
+<?php
 
-  <?php
+require_once("../scripts/utils.php");
 
-  require_once("../scripts/utils.php");
+if (isset($_POST["submit"])) {
+  $qry = "CALL unimia.valuta_iscrizione($1, $2, $3);";
+  $res = pg_prepare($con, "", $qry);
+  $res = pg_execute($con, "", array($_POST["studente"], $_POST["appello"], $_POST["voto"]));
+  if (!$res) {
+    $error = ParseError(pg_last_error());
+  }
+  else {
+    unset($error);
+    $_SESSION["feedback"] = "Valutazione modificata con successo.";
+    Redirect("home.php");
+  }
+}
 
-  $CUR_PAGE = "segretario";
-  require("../scripts/redirector.php");
+$CUR_PAGE = "segretario";
+$fa_icon = "fa-marker";
+$title = "Modifica valutazione";
+$subtitle = "";
 
-  require("../components/navbar.php");
+$class = "is-link";
+$help = "";
 
-  ?>
+$inputs = array(
+  array(
+    "type"=>"hidden",
+    "name"=>"appello",
+    "value"=>$_POST["appello"]
+  ),
+  array(
+    "type"=>"hidden",
+    "name"=>"studente",
+    "value"=>$_POST["studente"]
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Insegnamento",
+    "name"=>"insegnamento",
+    "value"=>$_POST["insegnamento"]." - ".$_POST["nome_insegnamento"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-book",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Data",
+    "name"=>"data",
+    "value"=>$_POST["data"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-calendar-day",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Matricola",
+    "name"=>"matricola",
+    "value"=>$_POST["matricola"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-barcode",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Nome",
+    "name"=>"nome",
+    "value"=>$_POST["nome"],
+    "readonly"=>"readonly",
+    "placeholder"=>"",
+    "icon"=>"fa-align-center",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Voto",
+    "name"=>"voto",
+    "value"=>$_POST["voto"],
+    "required"=>"required",
+    "placeholder"=>"Voto",
+    "icon"=>"fa-align-center",
+    "help"=>"Un voto inferiore a 18 comporta la bocciatura, tra 18 e 30 la promozione e 31 la lode."
+  ),
+);
 
-  <div class="container is-max-desktop">
+require("../components/form.php");
 
-    <?php
-
-      if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.valuta_iscrizione($1, $2, $3);";
-        $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["studente"], $_POST["appello"], $_POST["voto"]));
-
-        if (!$res): ?>
-          <div class="notification is-danger is-light mt-6">
-            <strong>Errore durante la creazione:</strong>
-            <?php echo ParseError(pg_last_error()); ?>.
-          </div>
-        <?php else: 
-          $_SESSION["feedback"] = "Valutazione inserita con successo.";
-          Redirect("home.php");
-        endif;
-      }
-    ?>
-    
-    <form class="box p-6" action="" method="post">
-
-      <span class="icon-text">
-        <span class="icon is-large">
-          <i class="fa-solid fa-users fa-2xl"></i>
-        </span>
-        <h1 class="title mt-2">Valuta iscrizione</h1>
-      </span>
-
-      <input type="hidden" name="appello" value="<?php echo $_POST["appello"] ?>">
-      <input type="hidden" name="studente" value="<?php echo $_POST["studente"] ?>">
-
-      <label class="label mt-5">Insegnamento</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["insegnamento"] ?> - <?php echo $_POST["nome_insegnamento"] ?>" required readonly>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-book"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Data</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["data"] ?>" required readonly>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-calendar-days"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Matricola</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["matricola"] ?>" required readonly>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-barcode"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Nome</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" value="<?php echo $_POST["nome"] ?>" required readonly>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-align-center"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Voto</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="number" name="voto" placeholder="Voto" value="<?php echo $_POST["voto"] ?>" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-marker"></i>
-          </span>
-        </p>
-        <p class="help">Un voto inferiore a 18 comporta la bocciatura, tra 18 e 30 la promozione e 31 la lode.</p>
-      </div>
-
-      <div class="field mt-5">
-        <p class="control">
-          <input type="submit" name="submit" value="Modifica valutazione" class="button is-link is-fullwidth is-medium">
-        </p>
-      </div>
-
-    </form>
-  
-  </div>
-    
-  <?php require("../components/footer.php"); ?>
-
-</body>
-</html>
+?>

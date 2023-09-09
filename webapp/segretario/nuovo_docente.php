@@ -1,105 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="../styles/index.css">
-  <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Nuovo docente - SuperUnimia</title>
-</head>
-<body class="has-background-dark has-text-light">
+<?php
 
-  <?php
+require_once("../scripts/utils.php");
 
-  require_once("../scripts/utils.php");
+if (isset($_POST["submit"])) {
+  $qry = "CALL unimia.new_docente($1, $2, $3);";
+  $res = pg_prepare($con, "", $qry);
+  $res = pg_execute($con, "", array($_POST["nome"], $_POST["cognome"], $_POST["password"]));
 
-  $CUR_PAGE = "segretario";
-  require("../scripts/redirector.php");
+  if (!$res) {
+    $error = ParseError(pg_last_error());
+  }
+  else {
+    unset($error);
+    $_SESSION["feedback"] = "Docente creato con successo.";
+    Redirect("home.php");
+  }
+}
 
-  require("../components/navbar.php");
+$CUR_PAGE = "segretario";
+$fa_icon = "fa-user-tie";
+$title = "Nuovo docente";
+$subtitle = "";
 
-  ?>
+$class = "is-link";
+$help = "L'email verrà generata automaticamente.";
 
-  <div class="container is-max-desktop">
+$inputs = array(
+  array(
+    "type"=>"text",
+    "label"=>"Nome",
+    "name"=>"nome",
+    "value"=>$_POST["nome"],
+    "placeholder"=>"Nome",
+    "required"=>"required",
+    "icon"=>"fa-user-tag",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Cognome",
+    "name"=>"cognome",
+    "value"=>$_POST["cognome"],
+    "placeholder"=>"Cognome",
+    "required"=>"required",
+    "icon"=>"fa-user-tag",
+    "help"=>""
+  ),
+  array(
+    "type"=>"password",
+    "label"=>"Password",
+    "name"=>"password",
+    "value"=>$_POST["password"],
+    "placeholder"=>"Password",
+    "required"=>"required",
+    "icon"=>"fa-lock",
+    "help"=>""
+  )
+);
 
-    <?php
+require("../components/form.php");
 
-      if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.new_docente($1, $2, $3);";
-        $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["nome"], $_POST["cognome"], $_POST["password"]));
-
-        if (!$res): ?>
-          <div class="notification is-danger is-light mt-6">
-            <strong>Errore durante la creazione:</strong>
-            <?php echo ParseError(pg_last_error()); ?>.
-          </div>
-        <?php else: 
-          $_SESSION["feedback"] = "Docente creato con successo.";
-          Redirect("home.php");
-        endif;
-      }
-    ?>
-    
-    <form class="box p-6" action="" method="post">
-
-      <span class="icon-text">
-        <span class="icon is-large">
-          <i class="fa-solid fa-user-tie fa-2xl"></i>
-        </span>
-        <h1 class="title mt-2">Nuovo docente</h1>
-      </span>
-
-      <label class="label mt-5">Nome</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" name="nome" placeholder="Nome" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-user-tag"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Cognome</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" name="cognome" placeholder="Cognome" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-user-tag"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Password</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="password" name="password" placeholder="Password" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-lock"></i>
-          </span>
-        </p>
-        <p class="help">Lunghezza minima 8 caratteri.</p>
-      </div>
-
-      <div class="icon-text mt-5">
-        <span class="icon">
-          <i class="fa-solid fa-circle-info"></i>
-        </span>
-        <span>Email verrà generata automaticamente.</span>
-      </div>
-
-      <div class="field mt-5">
-        <p class="control">
-          <input type="submit" name="submit" value="Crea utente" class="button is-link is-fullwidth is-medium">
-        </p>
-      </div>
-
-    </form>
-  
-  </div>
-    
-  <?php require("../components/footer.php"); ?>
-
-</body>
-</html>
+?>

@@ -1,114 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="../styles/index.css">
-  <script src="https://kit.fontawesome.com/eb793f993c.js" crossorigin="anonymous"></script>
-  <title>Nuovo corso di laurea - SuperUnimia</title>
-</head>
-<body class="has-background-dark has-text-light">
+<?php
 
-  <?php
+require_once("../scripts/utils.php");
 
-  require_once("../scripts/utils.php");
+if (isset($_POST["submit"])) {
+  $qry = "CALL unimia.new_corso_di_laurea($1, $2, $3, $4);";
+  $res = pg_prepare($con, "", $qry);
+  $res = pg_execute($con, "", array($_POST["codice"], $_POST["tipo"], $_POST["nome"], $_POST["descrizione"]));
 
-  $CUR_PAGE = "segretario";
-  require("../scripts/redirector.php");
+  if (!$res) {
+    $error = ParseError(pg_last_error());
+  }
+  else {
+    unset($error);
+    $_SESSION["feedback"] = "Corso di laurea creato con successo.";
+    Redirect("home.php");
+  }
+}
 
-  require("../components/navbar.php");
+$CUR_PAGE = "segretario";
+$fa_icon = "fa-graduation-cap";
+$title = "Nuovo corso di laurea";
+$subtitle = "";
 
-  ?>
+$class = "is-link";
+$help = "";
 
-  <div class="container is-max-desktop">
+$inputs = array(
+  array(
+    "type"=>"text",
+    "label"=>"Codice",
+    "name"=>"codice",
+    "value"=>$_POST["codice"],
+    "placeholder"=>"Codice",
+    "required"=>"required",
+    "icon"=>"fa-barcode",
+    "help"=>"Lunghezza massima codice 6 caratteri."
+  ),
+  array(
+    "type"=>"select",
+    "name"=>"tipo",
+    "label"=>"Tipo",
+    "icon"=>"fa-calendar-days",
+    "options"=>array(
+      "Triennale"=>"Triennale",
+      "Magistrale"=>"Magistrale",
+      "Magistrale a ciclo unico"=>"Magistrale a ciclo unico"
+    ),
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Nome",
+    "name"=>"nome",
+    "value"=>$_POST["nome"],
+    "placeholder"=>"Nome",
+    "required"=>"required",
+    "icon"=>"fa-align-center",
+    "help"=>""
+  ),
+  array(
+    "type"=>"text",
+    "label"=>"Descrizione",
+    "name"=>"descrizione",
+    "value"=>$_POST["descrizione"],
+    "placeholder"=>"Descrizione",
+    "required"=>"required",
+    "icon"=>"fa-align-justify",
+    "help"=>""
+  )
+);
 
-    <?php
+require("../components/form.php");
 
-      if (isset($_POST["submit"])) {
-        $qry = "CALL unimia.new_corso_di_laurea($1, $2, $3, $4);";
-        $res = pg_prepare($con, "", $qry);
-        $res = pg_execute($con, "", array($_POST["codice"], $_POST["tipo"], $_POST["nome"], $_POST["descrizione"]));
-
-        if (!$res): ?>
-          <div class="notification is-danger is-light mt-6">
-            <strong>Errore durante la creazione:</strong>
-            <?php echo ParseError(pg_last_error()); ?>.
-          </div>
-        <?php else: 
-          $_SESSION["feedback"] = "Corso di laurea creato con successo.";
-          Redirect("home.php");
-        endif;
-      }
-    ?>
-    
-    <form class="box p-6" action="" method="post">
-
-      <span class="icon-text">
-        <span class="icon is-large">
-          <i class="fa-solid fa-graduation-cap fa-2xl"></i>
-        </span>
-        <h1 class="title mt-2">Nuovo corso di laurea</h1>
-      </span>
-
-      <label class="label mt-5">Codice</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" name="codice" placeholder="L-00" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-barcode"></i>
-          </span>
-        </p>
-        <p class="help">Lunghezza massima codice 6 caratteri.</p>
-      </div>
-
-      <label class="label mt-5">Tipo</label>
-      <div class="field">
-        <div class="control has-icons-left">
-          <div class="select is-fullwidth">
-            <select name="tipo">
-              <option>Triennale</option>
-              <option>Magistrale</option>
-              <option>Magistrale a ciclo unico</option>
-            </select>
-          </div>
-          <div class="icon is-small is-left">
-            <i class="fa-solid fa-calendar-days"></i>
-          </div>
-        </div>
-      </div>
-
-      <label class="label mt-5">Nome</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" name="nome" placeholder="Nome" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-align-center"></i>
-          </span>
-        </p>
-      </div>
-
-      <label class="label mt-5">Descrizione</label>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" name="descrizione" placeholder="Descrizione" required>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-align-justify"></i>
-          </span>
-        </p>
-      </div>
-
-      <div class="field mt-5">
-        <p class="control">
-          <input type="submit" name="submit" value="Crea corso di laurea" class="button is-link is-fullwidth is-medium">
-        </p>
-      </div>
-
-    </form>
-  
-  </div>
-    
-  <?php require("../components/footer.php"); ?>
-
-</body>
-</html>
+?>
