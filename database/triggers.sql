@@ -129,6 +129,7 @@ CREATE OR REPLACE FUNCTION controllo_propedeuticita_cicliche_func()
   RETURNS TRIGGER
   LANGUAGE plpgsql
   AS $$
+    DECLARE _c INTEGER;
     BEGIN
 
       SET search_path TO unimia;
@@ -137,22 +138,21 @@ CREATE OR REPLACE FUNCTION controllo_propedeuticita_cicliche_func()
         raise exception 'È presente una propedeuticità ciclica';
       END IF;
 
-      PERFORM (
-        WITH RECURSIVE propedeutici AS (
-            -- non-recursive term
-            SELECT p.insegnamento_propedeutico
-            FROM propedeuticita AS p
-            WHERE insegnamento = NEW.insegnamento_propedeutico
-          UNION
-            -- recursive term
-            SELECT p2.insegnamento_propedeutico
-            FROM propedeutici AS p
-            INNER JOIN propedeuticita AS p2 ON p.insegnamento_propedeutico = p2.insegnamento
-        )
-        SELECT count(*) FROM propedeutici AS p
-        WHERE p.insegnamento_propedeutico = NEW.insegnamento
-      );
-      IF FOUND THEN
+      WITH RECURSIVE propedeutici AS (
+          -- non-recursive term
+          SELECT p.insegnamento_propedeutico
+          FROM propedeuticita AS p
+          WHERE insegnamento = NEW.insegnamento_propedeutico
+        UNION
+          -- recursive term
+          SELECT p2.insegnamento_propedeutico
+          FROM propedeutici AS p
+          INNER JOIN propedeuticita AS p2 ON p.insegnamento_propedeutico = p2.insegnamento
+      )
+      SELECT count(*) INTO _c FROM propedeutici AS p
+      WHERE p.insegnamento_propedeutico = NEW.insegnamento;
+
+      IF _c > 0 THEN
         raise exception 'È presente una propedeuticità ciclica';
       END IF;
 
