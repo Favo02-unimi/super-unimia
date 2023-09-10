@@ -203,3 +203,55 @@ CREATE OR REPLACE TRIGGER controllo_appelli_per_anno
   ON appelli
   FOR EACH ROW
   EXECUTE PROCEDURE controllo_appelli_per_anno_func();
+
+-- controlla che le propedeuticitià siano rispettate all'iscrizione ad un appello
+CREATE OR REPLACE FUNCTION controllo_propedeuticita_iscrizione_func()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _insegnamento VARCHAR(6);
+    DECLARE _c INTEGER;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT i.codice INTO _insegnamento
+      FROM appelli AS a
+      INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
+      WHERE a.codice = NEW.appello;
+
+      WITH RECURSIVE propedeutici AS (
+          -- non-recursive term
+          SELECT p.insegnamento_propedeutico
+          FROM propedeuticita AS p
+          WHERE insegnamento = _insegnamento
+        UNION
+          -- recursive term
+          SELECT p2.insegnamento_propedeutico
+          FROM propedeutici AS p
+          INNER JOIN propedeuticita AS p2 ON p.insegnamento_propedeutico = p2.insegnamento
+      )
+      SELECT count(*) INTO _c
+      FROM propedeutici AS p
+      WHERE NOT EXISTS (
+        SELECT *
+        FROM get_valutazioni_per_studente(NEW.studente) AS val
+        WHERE val.__insegnamento = p.insegnamento_propedeutico
+        AND val.__valida = true
+      );
+
+      IF _c > 0 THEN
+        raise exception 'Non sono rispettate tutte le propedeuticità';
+      END IF;
+
+      RETURN NEW;
+
+    END;
+  $$;
+CREATE OR REPLACE TRIGGER controllo_propedeuticita_iscrizione
+  BEFORE INSERT
+  ON iscrizioni
+  FOR EACH ROW
+  EXECUTE PROCEDURE controllo_propedeuticita_iscrizione_func();
+
+drop trigger controllo_propedeuticita_iscrizione on iscrizioni;
