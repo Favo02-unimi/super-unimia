@@ -27,7 +27,7 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__nome_docente"]),
         array("type"=>"text", "val"=>$row["__nome_studente"]),
         array("type"=>"text", "val"=>$row["__matricola_studente"]),
-        array("type"=>"text", "val"=>$row["__voto"]),
+        array("type"=>"text", "val"=>$row["__voto"] == "" ? "<i>In attesa</i>" : $row["__voto"]),
         array("type"=>"text", "val"=>$row["__valida"] == "f" ? "<i>Non valida</i>" : "<b>Valida</b>"),
         array(
           "type"=>"button",
@@ -42,7 +42,7 @@ while($row = pg_fetch_assoc($res)) {
             "data"=>$row["__data"],
             "matricola"=>$row["__matricola_studente"],
             "nome"=>$row["__nome_studente"],
-            "voto"=>$row["__voto"]
+            "voto"=>$row["__voto"] == "" ? "In attesa" : $row["__voto"]
           )
         )
       )

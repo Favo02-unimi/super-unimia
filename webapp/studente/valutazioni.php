@@ -25,7 +25,7 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__insegnamento"]." - ".$row["__nome_insegnamento"]),
         array("type"=>"text", "val"=>$row["__data"]),
         array("type"=>"text", "val"=>$row["__nome_docente"]),
-        array("type"=>"text", "val"=>$row["__voto"]),
+        array("type"=>"text", "val"=>$row["__voto"] == "" ? "In attesa" : $row["__voto"]),
         array("type"=>"text", "val"=>$row["__valida"] == "f" ? "<i>Non valida</i>" : "<b>Valida</b>"),
       )
     )
