@@ -356,6 +356,9 @@ CREATE OR REPLACE FUNCTION get_valutazioni ()
           isc.voto,
           (
             CASE
+              -- voto in attesa o insufficiente
+              WHEN (isc.voto IS NULL) OR (isc.voto < 18) THEN false
+              -- voto sovrascritto da appello più recente
               WHEN EXISTS (
                 SELECT *
                 FROM iscrizioni AS isc2
@@ -364,7 +367,6 @@ CREATE OR REPLACE FUNCTION get_valutazioni ()
                 AND a2.insegnamento = a.insegnamento
                 AND a2.data > a.data
               ) THEN false
-              WHEN isc.voto < 18 THEN false
               ELSE true
             END
           ) as valida
@@ -374,7 +376,7 @@ CREATE OR REPLACE FUNCTION get_valutazioni ()
         INNER JOIN utenti AS udoc ON udoc.id = i.responsabile
         INNER JOIN utenti AS ustu ON ustu.id = isc.studente
         INNER JOIN studenti AS s ON s.id = isc.studente
-        AND isc.voto IS NOT NULL
+        WHERE Now() > a.data
         ORDER BY isc.studente, i.codice, a.data;
 
     END;
@@ -593,16 +595,17 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
         SELECT isc.appello, a.insegnamento, i.nome, a.data, i.responsabile, CONCAT(u.nome, ' ', u.cognome), isc.voto,
           (
             CASE
+              -- voto in attesa o insufficiente
+              WHEN (isc.voto IS NULL) OR (isc.voto < 18) THEN false
+              -- voto sovrascritto da appello più recente
               WHEN EXISTS (
                 SELECT *
                 FROM iscrizioni AS isc2
-                INNER JOIN appelli a2 on isc2.appello = a2.codice
+                INNER JOIN appelli AS a2 on isc2.appello = a2.codice
                 WHERE isc2.studente = _id
                 AND a2.insegnamento = a.insegnamento
                 AND a2.data > a.data
-                AND isc2.voto IS NOT NULL
               ) THEN false
-              WHEN isc.voto < 18 THEN false
               ELSE true
             END
           ) as valida
@@ -611,7 +614,7 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
         INNER JOIN insegnamenti i ON a.insegnamento = i.codice
         INNER JOIN utenti AS u ON u.id = i.responsabile
         WHERE isc.studente = _id
-        AND isc.voto IS NOT NULL
+        AND Now() > a.data
         ORDER BY i.codice, a.data;
 
     END;
