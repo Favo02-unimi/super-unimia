@@ -9,7 +9,7 @@ $subtitle = "Vengono visualizzate tutte le valutazioni, anche quelle non valide 
 
 $table_headers = array("Insegnamento", "Data", "Docente", "Studente", "Matricola", "Voto", "Valida", "Controlli");
 
-$qry = "SELECT __appello, __insegnamento, __nome_insegnamento, __data, __nome_docente, __studente, __nome_studente, __matricola_studente, __voto, __valida FROM unimia.get_valutazioni()";
+$qry = "SELECT __appello, __insegnamento, __nome_insegnamento, __data, __nome_docente, __studente, __nome_studente, __matricola_studente, __voto, __valida, __media FROM unimia.get_valutazioni()";
 $res = pg_prepare($con, "", $qry);
 $res = pg_execute($con, "", array());
 
@@ -19,7 +19,7 @@ while($row = pg_fetch_assoc($res)) {
   array_push($rows,
     array(
       "separator"=>$row["__studente"],
-      "separator_text"=>$row["__matricola_studente"]." - ".$row["__nome_studente"],
+      "separator_text"=>$row["__matricola_studente"]." - ".$row["__nome_studente"]." - Media: ".number_format(floatval($row["__media"]), 2, '.', ''),
       "class"=>$row["__valida"] == "f" ? "invalid" : "",
       "cols"=> array(
         array("type"=>"text", "val"=>$row["__insegnamento"]." - ".$row["__nome_insegnamento"]),
