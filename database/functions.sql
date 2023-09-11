@@ -366,6 +366,7 @@ CREATE OR REPLACE FUNCTION get_valutazioni ()
                 WHERE isc2.studente = isc.studente
                 AND a2.insegnamento = a.insegnamento
                 AND a2.data > a.data
+                AND Now() > a2.data
               ) THEN false
               ELSE true
             END
@@ -605,6 +606,7 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
                 WHERE isc2.studente = _id
                 AND a2.insegnamento = a.insegnamento
                 AND a2.data > a.data
+                AND Now() > a2.data
               ) THEN false
               ELSE true
             END
