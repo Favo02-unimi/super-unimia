@@ -341,7 +341,8 @@ CREATE OR REPLACE FUNCTION get_valutazioni ()
     __nome_studente TEXT,
     __matricola_studente CHAR(6),
     __voto INTEGER,
-    __valida BOOLEAN
+    __valida BOOLEAN,
+    __media NUMERIC
   )
   LANGUAGE plpgsql
   AS $$
@@ -370,7 +371,10 @@ CREATE OR REPLACE FUNCTION get_valutazioni ()
               ) THEN false
               ELSE true
             END
-          ) as valida
+          ) as valida,
+          (
+            SELECT gmps.__media FROM get_media_per_studente(isc.studente) AS gmps
+          ) AS media
         FROM iscrizioni AS isc
         INNER JOIN appelli AS a ON a.codice = isc.appello
         INNER JOIN insegnamenti i ON a.insegnamento = i.codice
@@ -577,6 +581,7 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
   _id uuid
 )
   RETURNS TABLE (
+    __studente uuid,
     __appello uuid,
     __insegnamento VARCHAR(6),
     __nome_insegnamento TEXT,
@@ -584,7 +589,8 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
     __docente uuid,
     __nome_docente TEXT,
     __voto INTEGER,
-    __valida BOOLEAN
+    __valida BOOLEAN,
+    __media NUMERIC
   )
   LANGUAGE plpgsql
   AS $$
@@ -593,7 +599,7 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT isc.appello, a.insegnamento, i.nome, a.data, i.responsabile, CONCAT(u.nome, ' ', u.cognome), isc.voto,
+        SELECT _id, isc.appello, a.insegnamento, i.nome, a.data, i.responsabile, CONCAT(u.nome, ' ', u.cognome), isc.voto,
           (
             CASE
               -- voto in attesa o insufficiente
@@ -610,7 +616,10 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
               ) THEN false
               ELSE true
             END
-          ) as valida
+          ) as valida,
+          (
+            SELECT gmps.__media FROM get_media_per_studente(_id) AS gmps
+          ) AS media
         FROM iscrizioni AS isc
         INNER JOIN appelli AS a ON a.codice = isc.appello
         INNER JOIN insegnamenti i ON a.insegnamento = i.codice
@@ -618,6 +627,39 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
         WHERE isc.studente = _id
         AND Now() > a.data
         ORDER BY i.codice, a.data;
+
+    END;
+  $$;
+
+-- restituisce la media delle valutazioni attive di uno studente
+CREATE OR REPLACE FUNCTION get_media_per_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __media NUMERIC
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT avg(voto)
+        FROM iscrizioni AS isc
+        INNER JOIN appelli AS a ON a.codice = isc.appello
+        WHERE studente = _id
+        AND voto IS NOT NULL
+        AND voto >= 18
+        AND NOT EXISTS (
+          SELECT *
+          FROM iscrizioni AS isc2
+          INNER JOIN appelli AS a2 ON a2.codice = isc2.appello
+          WHERE isc2.studente = _id
+          AND a2.insegnamento = a.insegnamento
+          AND a2.data > a.data
+          AND Now() > a2.data
+        );
 
     END;
   $$;
