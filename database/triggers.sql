@@ -210,16 +210,28 @@ CREATE OR REPLACE FUNCTION controllo_propedeuticita_iscrizione_func()
   LANGUAGE plpgsql
   AS $$
     DECLARE _insegnamento VARCHAR(6);
+    DECLARE _cdl VARCHAR(6);
+    DECLARE _cdl_studente VARCHAR(6);
     DECLARE _c INTEGER;
     BEGIN
 
       SET search_path TO unimia;
 
-      SELECT i.codice INTO _insegnamento
+      SELECT i.codice, i.corso_di_laurea INTO _insegnamento, _cdl
       FROM appelli AS a
       INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
       WHERE a.codice = NEW.appello;
 
+      SELECT s.corso_di_laurea INTO _cdl_studente
+      FROM studenti AS s
+      WHERE s.id = NEW.studente;
+
+      -- controllo corso di laurea
+      IF _cdl != _cdl_studente THEN
+        raise exception E'Il corso di laurea dell\'appello non corrisponde a quello dello studente';
+      END IF;
+
+      -- controllo propedeuticità
       WITH RECURSIVE propedeutici AS (
           -- non-recursive term
           SELECT p.insegnamento_propedeutico
@@ -253,5 +265,3 @@ CREATE OR REPLACE TRIGGER controllo_propedeuticita_iscrizione
   ON iscrizioni
   FOR EACH ROW
   EXECUTE PROCEDURE controllo_propedeuticita_iscrizione_func();
-
-drop trigger controllo_propedeuticita_iscrizione on iscrizioni;
