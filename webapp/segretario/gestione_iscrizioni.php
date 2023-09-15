@@ -18,8 +18,8 @@ $rows = array();
 while($row = pg_fetch_assoc($res)) {
   array_push($rows,
     array(
-      "separator"=>$row["__insegnamento"],
-      "separator_text"=>$row["__corso_di_laurea"]." - ".$row["__nome_corso_di_laurea"].": ".$row["__insegnamento"]." - ".$row["__nome_insegnamento"],
+      "separator"=>$row["__insegnamento"].$row["__data"],
+      "separator_text"=>$row["__corso_di_laurea"]." - ".$row["__nome_corso_di_laurea"].": ".$row["__insegnamento"]." - ".$row["__nome_insegnamento"]." - Appello ".$row["__data"],
       "class"=>"",
       "cols"=> array(
         array("type"=>"text", "val"=>$row["__corso_di_laurea"]." - ".$row["__nome_corso_di_laurea"]),

@@ -7,7 +7,7 @@ $fa_icon = "fa-calendar-day";
 $title = "Gestione appelli";
 $subtitle = "";
 
-$table_headers = array("Corso di laurea", "Insegnamento", "Data", "Ora", "Luogo", "Docente", "Iscritti", array("colspan"=>"2", "text"=>"Controlli"));
+$table_headers = array("Corso di laurea", "Insegnamento", "Data", "Ora", "Luogo", "Docente", "Iscritti", array("colspan"=>"4", "text"=>"Controlli"));
 
 $qry = "SELECT __codice, __corso_di_laurea, __nome_corso_di_laurea, __insegnamento, __nome_insegnamento, __data, __ora, __luogo, __docente, __nome_docente, __iscritti FROM unimia.get_appelli()";
 $res = pg_prepare($con, "", $qry);
@@ -29,6 +29,20 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__luogo"]),
         array("type"=>"text", "val"=>$row["__nome_docente"]),
         array("type"=>"text", "val"=>$row["__iscritti"]),
+        array(
+          "type"=>"button",
+          "target"=>"gestione_iscrizioni.php?filter=".$row["__data"]."&highlight=false&hide=true",
+          "submit"=>"Iscritti",
+          "class"=>"is-link",
+          "params"=>array()
+        ),
+        array(
+          "type"=>"button",
+          "target"=>"gestione_valutazioni.php?filter=".$row["__data"]."&highlight=false&hide=true",
+          "submit"=>"Valutazioni",
+          "class"=>"is-link",
+          "params"=>array()
+        ),
         array(
           "type"=>"button",
           "target"=>"modifica_appello.php",

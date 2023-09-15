@@ -12,7 +12,7 @@ $create = array(
   "text"=>"Crea nuovo insegnamento"
 );
 
-$table_headers = array("Codice", "Corso di laurea", "Nome", "Descrizione", "Anno", "Responsabile", "Propedeuticità", array("colspan"=>"2", "text"=>"Controlli"));
+$table_headers = array("Codice", "Corso di laurea", "Nome", "Descrizione", "Anno", "Responsabile", "Propedeuticità", array("colspan"=>"4", "text"=>"Controlli"));
 
 $qry = "SELECT __codice, __corso_di_laurea, __nome_corso_di_laurea, __nome, __descrizione, __anno, __responsabile, __nome_responsabile, __email_responsabile, __propedeuticita FROM unimia.get_insegnamenti()";
 $res = pg_prepare($con, "", $qry);
@@ -34,6 +34,20 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__anno"]),
         array("type"=>"text", "val"=>$row["__nome_responsabile"]."<br>".$row["__email_responsabile"]),
         array("type"=>"text", "val"=>$row["__propedeuticita"] == "" ? "-" : $row["__propedeuticita"]),
+        array(
+          "type"=>"button",
+          "target"=>"gestione_appelli.php?filter=".$row["__codice"]."&highlight=false&hide=true",
+          "submit"=>"Appelli",
+          "class"=>"is-link",
+          "params"=>array()
+        ),
+        array(
+          "type"=>"button",
+          "target"=>"gestione_valutazioni.php?filter=".$row["__codice"]."&highlight=false&hide=true",
+          "submit"=>"Valutazioni",
+          "class"=>"is-link",
+          "params"=>array()
+        ),
         array(
           "type"=>"button",
           "target"=>"modifica_insegnamento.php",

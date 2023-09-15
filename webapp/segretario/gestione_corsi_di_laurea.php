@@ -12,7 +12,7 @@ $create = array(
   "text"=>"Crea nuovo corso di laurea"
 );
 
-$table_headers = array("Codice", "Tipo", "Nome", "Descrizione", array("colspan"=>"2", "text"=>"Controlli"));
+$table_headers = array("Codice", "Tipo", "Nome", "Descrizione", array("colspan"=>"3", "text"=>"Controlli"));
 
 $qry = "SELECT __codice, __tipo, __nome, __descrizione FROM unimia.get_corsi_di_laurea()";
 $res = pg_prepare($con, "", $qry);
@@ -31,6 +31,13 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__tipo"]),
         array("type"=>"text", "val"=>$row["__nome"]),
         array("type"=>"text", "val"=>$row["__descrizione"]),
+        array(
+          "type"=>"button",
+          "target"=>"gestione_insegnamenti.php?filter=".$row["__codice"]."&highlight=false&hide=true",
+          "submit"=>"Insegnamenti",
+          "class"=>"is-link",
+          "params"=>array()
+        ),
         array(
           "type"=>"button",
           "target"=>"modifica_corso_di_laurea.php",

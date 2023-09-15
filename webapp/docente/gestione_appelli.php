@@ -34,21 +34,17 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__iscritti"]),
         array(
           "type"=>"button",
-          "target"=>"gestione_iscrizioni.php",
+          "target"=>"gestione_iscrizioni.php?filter=".$row["__data"]."&highlight=false&hide=true",
           "submit"=>"Iscritti",
           "class"=>"is-link",
-          "params"=>array(
-            "codice"=>$row["__codice"]
-          )
+          "params"=>array()
         ),
         array(
           "type"=>"button",
-          "target"=>"gestione_valutazioni.php",
+          "target"=>"gestione_valutazioni.php?filter=".$row["__data"]."&highlight=false&hide=true",
           "submit"=>"Valutazioni",
           "class"=>"is-link",
-          "params"=>array(
-            "codice"=>$row["__codice"]
-          )
+          "params"=>array()
         ),
         array(
           "type"=>"button",

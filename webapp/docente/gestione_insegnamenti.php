@@ -29,30 +29,17 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__anno"]),
         array(
           "type"=>"button",
-          "target"=>"gestione_appelli.php",
+          "target"=>"gestione_appelli.php?filter=".$row["__codice"]."&highlight=false&hide=true",
           "submit"=>"Appelli",
           "class"=>"is-link",
-          "params"=>array(
-            "insegnamento"=>$row["__codice"]
-          )
+          "params"=>array()
         ),
         array(
           "type"=>"button",
-          "target"=>"gestione_iscrizioni.php",
-          "submit"=>"Iscritti",
-          "class"=>"is-link",
-          "params"=>array(
-            "insegnamento"=>$row["__codice"]
-          )
-        ),
-        array(
-          "type"=>"button",
-          "target"=>"gestione_valutazioni.php",
+          "target"=>"gestione_valutazioni.php?filter=".$row["__codice"]."&highlight=false&hide=true",
           "submit"=>"Valutazioni",
           "class"=>"is-link",
-          "params"=>array(
-            "insegnamento"=>$row["__codice"]
-          )
+          "params"=>array()
         )
       )
     )
