@@ -35,6 +35,8 @@ require("../scripts/redirector.php");
 require("head.php");
 require("navbar.php");
 
+require("filter.php");
+
 ?>
 
 <div class="container is-fullhd box">

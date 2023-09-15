@@ -62,3 +62,22 @@ body {
 [readonly]:focus ~ .icon {
   color: #dbdbdb !important;
 }
+
+.focused,
+.focused:hover {
+  background-color: rgb(72, 95, 199, 0.15) !important;
+  font-weight: 600;
+}
+.focused.invalid,
+.focused.invalid:hover {
+  background-color: rgb(72, 95, 199, 0.4) !important;
+}
+
+input[type=checkbox] {
+  transform: scale(1.2);
+  accent-color: #485fc7;
+}
+
+.hidden {
+  display: none;
+}
