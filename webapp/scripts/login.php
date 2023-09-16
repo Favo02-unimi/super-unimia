@@ -7,7 +7,6 @@ if (isset($_SESSION["userid"])) {
 }
 
 $email = $_POST["email"] . $_POST["type"];
-// $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
 $password = $_POST["password"];
 
 $qry = "SELECT __id, __type FROM unimia.login($1, $2)";
