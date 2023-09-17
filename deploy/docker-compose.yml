@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+
+  web:
+    image: nginx:latest
+    container_name: nginx-webserver
+    restart: unless-stopped
+    ports:
+      - 8888:80
+    volumes:
+      - './src:/var/www/html'
+      - './default.conf:/etc/nginx/conf.d/default.conf'
+    links:
+      - php-fpm
+
+  php-fpm:
+    build: .
+    container_name: nginx-webserver-php
+    restart: unless-stopped
+    volumes:
+      - './src:/var/www/html'
+      - './php.ini:/usr/local/etc/php/php.ini'
