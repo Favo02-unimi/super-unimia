@@ -8,7 +8,7 @@ Ogni **modifica** _pushata_ al [repository GitHub](https://github.com/Favo02/sup
 ### Requisiti:
 
 - PHP _(preferibile versione `8+`)_
-- WebServer _(è possibile utilizzare anche il webserver integrato di PHP)_
+- WebServer _(è possibile utilizzare anche il webserver integrato di PHP)_, per il deploy disponibile online è utilizzato `nginx`
 - Postgres server _(preferibile versione `15+`)_
 
 ### Installazione
