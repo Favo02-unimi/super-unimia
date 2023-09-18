@@ -445,6 +445,65 @@ CREATE OR REPLACE FUNCTION get_valutazioni ()
     END;
   $$;
 
+-- restituisce tutte le valutazioni e le carriere di ex studenti
+CREATE OR REPLACE FUNCTION get_ex_valutazioni ()
+  RETURNS TABLE (
+    __appello uuid,
+    __insegnamento VARCHAR(6),
+    __nome_insegnamento TEXT,
+    __data DATE,
+    __docente uuid,
+    __nome_docente TEXT,
+    __studente uuid,
+    __nome_studente TEXT,
+    __matricola_studente CHAR(6),
+    __voto INTEGER,
+    __valida BOOLEAN,
+    __media NUMERIC
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT isc.appello, a.insegnamento, i.nome, a.data,
+          i.responsabile, CONCAT(udoc.nome, ' ', udoc.cognome),
+          isc.studente, CONCAT(ustu.nome, ' ', ustu.cognome), s.matricola,
+          isc.voto,
+          (
+            CASE
+              -- voto in attesa o insufficiente
+              WHEN (isc.voto IS NULL) OR (isc.voto < 18) THEN false
+              -- voto sovrascritto da appello più recente
+              WHEN EXISTS (
+                SELECT *
+                FROM archivio_iscrizioni AS isc2
+                INNER JOIN appelli a2 on isc2.appello = a2.codice
+                WHERE isc2.studente = isc.studente
+                AND a2.insegnamento = a.insegnamento
+                AND a2.data > a.data
+                AND Now() > a2.data
+              ) THEN false
+              ELSE true
+            END
+          ) as valida,
+          (
+            SELECT gmps.__media FROM get_media_per_studente(isc.studente) AS gmps
+          ) AS media
+        FROM archivio_iscrizioni AS isc
+        INNER JOIN appelli AS a ON a.codice = isc.appello
+        INNER JOIN insegnamenti i ON a.insegnamento = i.codice
+        INNER JOIN utenti AS udoc ON udoc.id = i.responsabile
+        INNER JOIN utenti AS ustu ON ustu.id = isc.studente
+        INNER JOIN archivio_studenti AS s ON s.id = isc.studente
+        WHERE Now() > a.data
+        ORDER BY isc.studente, i.codice, a.data;
+
+    END;
+  $$;
+
 -- restituisce tutti gli insegnamenti di cui un docente è responsabile
 CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
   _id uuid
