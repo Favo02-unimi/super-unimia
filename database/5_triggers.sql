@@ -265,3 +265,43 @@ CREATE OR REPLACE TRIGGER controllo_propedeuticita_iscrizione
   ON iscrizioni
   FOR EACH ROW
   EXECUTE PROCEDURE controllo_propedeuticita_iscrizione_func();
+
+-- sposta uno studente e le sue iscrizioni nell'archivio alla cancellazione
+CREATE OR REPLACE FUNCTION archivia_studente_func()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _esami_mancanti INTEGER;
+    DECLARE _motivazione MOTIVAZIONE_ARCHIVIO;
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT count(*) INTO _esami_mancanti
+      FROM get_esami_mancanti_per_studente(OLD.id);
+
+      IF _esami_mancanti > 0 THEN
+        _motivazione := 'Rinuncia agli studi';
+      ELSE
+        _motivazione := 'Laurea';
+      END IF;
+
+      INSERT INTO archivio_studenti
+      VALUES (OLD.id, OLD.matricola, OLD.corso_di_laurea, _motivazione);
+
+      WITH old_iscrizioni AS (
+        DELETE FROM iscrizioni AS isc
+        WHERE isc.studente = OLD.id
+        RETURNING isc.*
+      )
+      INSERT INTO archivio_iscrizioni SELECT * FROM old_iscrizioni;
+
+      RETURN OLD;
+
+    END;
+  $$;
+CREATE OR REPLACE TRIGGER archivia_studente
+  BEFORE DELETE
+  ON studenti
+  FOR EACH ROW
+  EXECUTE PROCEDURE archivia_studente_func();

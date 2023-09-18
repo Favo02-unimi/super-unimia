@@ -68,9 +68,6 @@ CREATE OR REPLACE PROCEDURE delete_studente (
       DELETE FROM studenti
       WHERE id = _id;
 
-      DELETE FROM utenti
-      WHERE id = _id;
-
     END;
   $$;
 
