@@ -7,8 +7,10 @@ SET search_path TO unimia;
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- tipi di utenti possibili nel database
-CREATE TYPE TIPO_UTENTE AS ENUM ('studente', 'docente', 'segretario');
+CREATE TYPE TIPO_UTENTE AS ENUM ('studente', 'docente', 'segretario', 'ex_studente');
 
 CREATE TYPE TIPO_LAUREA AS ENUM ('Triennale', 'Magistrale', 'Magistrale a ciclo unico');
 
 CREATE TYPE ANNO_INSEGNAMENTO AS ENUM ('1', '2', '3', '4', '5');
+
+CREATE TYPE MOTIVAZIONE_ARCHIVIO AS ENUM ('Rinuncia agli studi', 'Laurea');

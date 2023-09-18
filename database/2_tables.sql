@@ -22,6 +22,13 @@ CREATE TABLE studenti (
   corso_di_laurea VARCHAR(6) NOT NULL REFERENCES corsi_di_laurea(codice) ON UPDATE CASCADE
 );
 
+CREATE TABLE archivio_studenti (
+  id uuid PRIMARY KEY REFERENCES utenti(id),
+  matricola CHAR(6) NOT NULL UNIQUE CHECK (matricola ~* '^\d{6}$'),
+  corso_di_laurea VARCHAR(6) NOT NULL REFERENCES corsi_di_laurea(codice) ON UPDATE CASCADE,
+  motivazione MOTIVAZIONE_ARCHIVIO NOT NULL
+);
+
 CREATE TABLE docenti (
   id uuid PRIMARY KEY REFERENCES utenti(id)
 );
@@ -50,6 +57,13 @@ CREATE TABLE appelli (
 CREATE TABLE iscrizioni (
   appello uuid NOT NULL REFERENCES appelli(codice),
   studente uuid NOT NULL REFERENCES studenti(id),
+  voto INTEGER CHECK (voto BETWEEN 0 AND 31) ,
+  PRIMARY KEY(appello, studente)
+);
+
+CREATE TABLE archivio_iscrizioni (
+  appello uuid NOT NULL REFERENCES appelli(codice),
+  studente uuid NOT NULL REFERENCES archivio_studenti(id),
   voto INTEGER CHECK (voto BETWEEN 0 AND 31) ,
   PRIMARY KEY(appello, studente)
 );
