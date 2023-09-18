@@ -749,3 +749,91 @@ CREATE OR REPLACE FUNCTION get_esami_mancanti_per_studente (
 
     END;
   $$;
+
+-- restituisce la media delle valutazioni attive di un ex studente
+CREATE OR REPLACE FUNCTION get_media_per_ex_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __media NUMERIC
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT avg(voto)
+        FROM archivio_iscrizioni AS isc
+        INNER JOIN appelli AS a ON a.codice = isc.appello
+        WHERE studente = _id
+        AND voto IS NOT NULL
+        AND voto >= 18
+        AND NOT EXISTS (
+          SELECT *
+          FROM archivio_iscrizioni AS isc2
+          INNER JOIN appelli AS a2 ON a2.codice = isc2.appello
+          WHERE isc2.studente = _id
+          AND a2.insegnamento = a.insegnamento
+          AND a2.data > a.data
+          AND Now() > a2.data
+        );
+
+    END;
+  $$;
+
+-- restituisce tutte le valutazioni date ad un ex studente
+CREATE OR REPLACE FUNCTION get_valutazioni_per_ex_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __studente uuid,
+    __appello uuid,
+    __insegnamento VARCHAR(6),
+    __nome_insegnamento TEXT,
+    __data DATE,
+    __docente uuid,
+    __nome_docente TEXT,
+    __voto INTEGER,
+    __valida BOOLEAN,
+    __media NUMERIC
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT _id, isc.appello, a.insegnamento, i.nome, a.data, i.responsabile, CONCAT(u.nome, ' ', u.cognome), isc.voto,
+          (
+            CASE
+              -- voto in attesa o insufficiente
+              WHEN (isc.voto IS NULL) OR (isc.voto < 18) THEN false
+              -- voto sovrascritto da appello più recente
+              WHEN EXISTS (
+                SELECT *
+                FROM archivio_iscrizioni AS isc2
+                INNER JOIN appelli AS a2 on isc2.appello = a2.codice
+                WHERE isc2.studente = _id
+                AND a2.insegnamento = a.insegnamento
+                AND a2.data > a.data
+                AND Now() > a2.data
+              ) THEN false
+              ELSE true
+            END
+          ) as valida,
+          (
+            SELECT gmps.__media FROM get_media_per_ex_studente(_id) AS gmps
+          ) AS media
+        FROM archivio_iscrizioni AS isc
+        INNER JOIN appelli AS a ON a.codice = isc.appello
+        INNER JOIN insegnamenti i ON a.insegnamento = i.codice
+        INNER JOIN utenti AS u ON u.id = i.responsabile
+        WHERE isc.studente = _id
+        AND Now() > a.data
+        ORDER BY i.codice, a.data;
+
+    END;
+  $$;
