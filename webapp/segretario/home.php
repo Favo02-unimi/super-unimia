@@ -80,6 +80,11 @@ require("../components/navbar.php");
       <strong>Gestione valutazioni e Carriere</strong>
     </a>
 
+    <a href="gestione_ex_valutazioni.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-marker fa-xl"></i></span>
+      <strong>Gestione valutazioni e Carriere ex studenti</strong>
+    </a>
+
   </div>
 
 <?php require("../components/footer.php"); ?>
