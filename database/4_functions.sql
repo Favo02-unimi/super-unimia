@@ -663,3 +663,59 @@ CREATE OR REPLACE FUNCTION get_media_per_studente (
 
     END;
   $$;
+
+-- restituisce gli esami mancanti per la laurea di uno studente
+CREATE OR REPLACE FUNCTION get_esami_mancanti_per_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __codice VARCHAR(6),
+    __nome TEXT,
+    __descrizione TEXT,
+    __anno ANNO_INSEGNAMENTO,
+    __responsabile uuid,
+    __nome_responsabile TEXT,
+    __email_responsabile TEXT,
+    __propedeuticita TEXT
+  )
+  LANGUAGE plpgsql
+  AS $$
+    DECLARE _cdl VARCHAR(6);
+    BEGIN
+
+      SET search_path TO unimia;
+
+      SELECT s.corso_di_laurea INTO _cdl
+      FROM studenti AS s
+      WHERE s.id = _id;
+
+      RETURN QUERY
+        SELECT i.codice, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(u.nome, ' ', u.cognome), u.email, string_agg(insegnamento_propedeutico, ', ')
+        FROM insegnamenti AS i
+        INNER JOIN docenti AS d ON d.id = i.responsabile
+        INNER JOIN utenti AS u ON d.id = u.id
+        LEFT JOIN propedeuticita AS p ON p.insegnamento = i.codice
+        WHERE i.corso_di_laurea = _cdl
+        AND NOT EXISTS (
+          SELECT *
+          FROM iscrizioni AS isc
+          INNER JOIN appelli AS a ON a.codice = isc.appello
+          WHERE isc.studente = _id
+          AND a.insegnamento = i.codice
+          AND isc.voto IS NOT NULL
+          AND isc.voto >= 18
+          AND NOT EXISTS (
+            SELECT *
+            FROM iscrizioni AS isc2
+            INNER JOIN appelli AS a2 ON a2.codice = isc2.appello
+            WHERE isc2.studente = _id
+            AND a2.insegnamento = a.insegnamento
+            AND a2.data > a.data
+            AND Now() > a2.data
+          )
+        )
+        GROUP BY i.codice, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(u.nome, ' ', u.cognome), u.email
+        ORDER BY i.corso_di_laurea, i.anno, i.codice;
+
+    END;
+  $$;
