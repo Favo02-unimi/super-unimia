@@ -40,6 +40,11 @@ require("../components/navbar.php");
       <strong>Gestione studenti</strong>
     </a>
 
+    <a href="gestione_ex_studenti.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-user-graduate fa-xl"></i></span>
+      <strong>Gestione ex studenti</strong>
+    </a>
+
     <a href="gestione_docenti.php" class="block button is-link is-outlined is-fullwidth">
       <span class="icon is-small"><i class="fa-solid fa-user-tie fa-xl"></i></span>
       <strong>Gestione docenti</strong>
