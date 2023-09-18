@@ -50,6 +50,11 @@ require("../components/navbar.php");
       <strong>Visualizza valutazioni e carriera</strong>
     </a>
 
+    <a href="esami_mancanti.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-list-check fa-xl"></i></span>
+      <strong>Visualizza esami mancanti</strong>
+    </a>
+
   </div>
 
 <?php require("../components/footer.php"); ?>
