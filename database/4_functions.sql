@@ -327,7 +327,7 @@ CREATE OR REPLACE FUNCTION get_appelli ()
     __luogo TEXT,
     __docente uuid,
     __nome_docente TEXT,
-    __iscritti INTEGER
+    __da_valutare INTEGER
   )
   LANGUAGE plpgsql
   AS $$
@@ -336,13 +336,18 @@ CREATE OR REPLACE FUNCTION get_appelli ()
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT a.codice, i.corso_di_laurea, cdl.nome, a.insegnamento, i.nome, a.data, a.ora, a.luogo, i.responsabile, CONCAT(u.nome, ' ', u.cognome), COUNT(isc.*)::INTEGER AS iscritti
+        SELECT a.codice, i.corso_di_laurea, cdl.nome, a.insegnamento, i.nome, a.data, a.ora, a.luogo, i.responsabile, CONCAT(u.nome, ' ', u.cognome),
+          (
+            SELECT count(*)
+            FROM iscrizioni AS isc
+            WHERE isc.appello = a.codice
+            AND isc.voto IS NULL
+          )::INTEGER AS da_valutare
         FROM appelli AS a
         INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
         INNER JOIN utenti AS u ON u.id = i.responsabile
         INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = i.corso_di_laurea
         LEFT JOIN iscrizioni AS isc ON isc.appello = a.codice
-        GROUP BY a.codice, i.corso_di_laurea, cdl.nome, a.insegnamento, i.nome, a.data, a.ora, a.luogo, i.responsabile, u.nome, u.cognome
         ORDER BY i.corso_di_laurea, a.insegnamento, a.data;
 
     END;
@@ -546,7 +551,7 @@ CREATE OR REPLACE FUNCTION get_appelli_per_docente (
     __data DATE,
     __ora TIME,
     __luogo TEXT,
-    __iscritti INTEGER
+    __da_valutare INTEGER
   )
   LANGUAGE plpgsql
   AS $$
@@ -555,12 +560,17 @@ CREATE OR REPLACE FUNCTION get_appelli_per_docente (
       SET search_path TO unimia;
 
       RETURN QUERY
-        SELECT a.codice, a.insegnamento, i.nome, a.data, a.ora, a.luogo, COUNT(isc.*)::INTEGER AS iscritti
+        SELECT a.codice, a.insegnamento, i.nome, a.data, a.ora, a.luogo,
+          (
+            SELECT count(*)
+            FROM iscrizioni AS isc
+            WHERE isc.appello = a.codice
+            AND isc.voto IS NULL
+          )::INTEGER AS da_valutare
         FROM appelli AS a
         INNER JOIN insegnamenti AS i ON i.codice = a.insegnamento
         LEFT JOIN iscrizioni AS isc ON isc.appello = a.codice
         WHERE i.responsabile = _id
-        GROUP BY a.codice, a.insegnamento, a.codice, i.nome, a.data, a.ora, a.luogo
         ORDER BY a.insegnamento, a.data;
 
     END;
