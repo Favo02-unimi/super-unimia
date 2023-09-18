@@ -22,7 +22,7 @@ require("../components/navbar.php");
 
     <div class="block">
       <p class="title is-2 is-link">Buongiorno, <?= $_SESSION["username"]; ?>.</p>
-      <p class="subtitle is-4">Servizi accessibili come <?= $_SESSION["usertype"]; ?>:</p>
+      <p class="subtitle is-4">Servizi accessibili come <?= str_replace("_", " ", $_SESSION["usertype"]) ?>:</p>
     </div>
 
     <a href="profilo.php" class="block button is-link is-outlined is-fullwidth">
