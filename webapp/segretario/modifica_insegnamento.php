@@ -23,7 +23,7 @@ $title = "Modifica insegnamento";
 $subtitle = "";
 
 $class = "is-link";
-$help = "";
+$help = "I campi lasciati vuoti non saranno modificati.";
 
 // options corso di laurea query
 $qry = "SELECT __codice, __nome FROM unimia.get_corsi_di_laurea()";

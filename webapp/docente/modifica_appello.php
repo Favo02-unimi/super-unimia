@@ -23,7 +23,7 @@ $title = "Modifica appello";
 $subtitle = "";
 
 $class = "is-link";
-$help = "È possibile modificare solo appelli futuri.";
+$help = "È possibile modificare solo appelli futuri. I campi lasciati vuoti non saranno modificati.";
 
 $inputs = array(
   array(
@@ -67,8 +67,7 @@ $inputs = array(
     "label"=>"Luogo",
     "name"=>"luogo",
     "value"=>$_POST["luogo"],
-    "placeholder"=>"",
-    "required"=>"required",
+    "placeholder"=>"Luogo",
     "icon"=>"fa-location-dot",
     "help"=>""
   )

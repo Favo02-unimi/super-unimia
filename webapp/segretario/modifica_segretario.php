@@ -23,7 +23,7 @@ $title = "Modifica segretario";
 $subtitle = "";
 
 $class = "is-link";
-$help = "Modificando manualmente nome, cognome o email, potrebbero generarsi inconsistenze tra email ed effetivo nome e cognome del segretario.";
+$help = "Modificando manualmente nome, cognome o email, potrebbero generarsi inconsistenze tra email ed effetivo nome e cognome del segretario. I campi lasciati vuoti non saranno modificati.";
 
 $inputs = array(
   array(

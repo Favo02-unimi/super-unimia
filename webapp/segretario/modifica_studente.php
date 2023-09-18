@@ -23,7 +23,7 @@ $title = "Modifica studente";
 $subtitle = "";
 
 $class = "is-link";
-$help = "Modificando manualmente nome, cognome o email, potrebbero generarsi inconsistenze tra email ed effetivo nome e cognome dello studente.";
+$help = "Modificando manualmente nome, cognome o email, potrebbero generarsi inconsistenze tra email ed effetivo nome e cognome dello studente. I campi lasciati vuoti non saranno modificati.";
 
 // options query
 $qry = "SELECT __codice, __nome FROM unimia.get_corsi_di_laurea()";
