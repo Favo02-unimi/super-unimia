@@ -296,6 +296,8 @@ CREATE OR REPLACE FUNCTION archivia_studente_func()
       )
       INSERT INTO archivio_iscrizioni SELECT * FROM old_iscrizioni;
 
+      UPDATE utenti SET tipo = 'ex_studente' WHERE id = OLD.id;
+
       RETURN OLD;
 
     END;
