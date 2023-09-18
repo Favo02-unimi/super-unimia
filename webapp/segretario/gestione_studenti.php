@@ -12,7 +12,7 @@ $create = array(
   "text"=>"Crea nuovo studente"
 );
 
-$table_headers = array("Nome", "Cognome", "Email", "Matricola", "Corso di laurea", array("colspan"=>"3", "text"=>"Controlli"));
+$table_headers = array("Nome", "Cognome", "Email", "Matricola", "Corso di laurea", array("colspan"=>"4", "text"=>"Controlli"));
 
 $qry = "SELECT __id, __nome, __cognome, __email, __matricola, __corso_di_laurea, __nome_corso_di_laurea FROM unimia.get_studenti()";
 $res = pg_prepare($con, "", $qry);
@@ -32,6 +32,13 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__email"]),
         array("type"=>"text", "val"=>$row["__matricola"]),
         array("type"=>"text", "val"=>$row["__corso_di_laurea"]." - ".$row["__nome_corso_di_laurea"]),
+        array(
+          "type"=>"button",
+          "target"=>"gestione_valutazioni.php?filter=".$row["__matricola"]."&highlight=false&hide=true",
+          "submit"=>"Carriera",
+          "class"=>"is-link",
+          "params"=>array()
+        ),
         array(
           "type"=>"button",
           "target"=>"modifica_studente.php",
