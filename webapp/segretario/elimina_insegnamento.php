@@ -23,7 +23,7 @@ $title = "Elimina insegnamento";
 $subtitle = "";
 
 $class = "is-danger";
-$help = "";
+$help = "È possibile eliminare un insegnamento solo se non esistono appelli (futuri i passati) dell'insegnamento.";
 
 $inputs = array(
   array(

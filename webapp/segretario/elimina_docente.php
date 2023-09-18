@@ -23,7 +23,7 @@ $title = "Elimina docente";
 $subtitle = "";
 
 $class = "is-danger";
-$help = "";
+$help = "È possibile eliminare un docente solo se non è responsabile di alcun insegnamento nè appello.";
 
 $inputs = array(
   array(

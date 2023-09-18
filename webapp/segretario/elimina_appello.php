@@ -23,7 +23,7 @@ $title = "Elimina appello";
 $subtitle = "";
 
 $class = "is-danger";
-$help = "";
+$help = "È possibile eliminare un appello solo se non sono presenti iscrizioni o valutazioni per questo appello.";
 
 $inputs = array(
   array(

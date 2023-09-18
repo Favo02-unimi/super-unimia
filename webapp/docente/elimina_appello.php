@@ -20,7 +20,7 @@ if (isset($_POST["submit"])) {
 $CUR_PAGE = "docente";
 $fa_icon = "fa-calendar-day";
 $title = "Elimina appello";
-$subtitle = "";
+$subtitle = "È possibile eliminare un appello solo se non sono presenti iscrizioni o valutazioni per questo appello.";
 
 $class = "is-danger";
 $help = "È possibile cancellare un appello solo in caso non sia mai utilizzato (non risultino studenti iscritti e/o voti registrati).";

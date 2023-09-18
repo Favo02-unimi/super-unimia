@@ -23,7 +23,7 @@ $title = "Elimina corso di laurea";
 $subtitle = "";
 
 $class = "is-danger";
-$help = "";
+$help = "È possibile eliminare un corso di laurea solo se non sono presenti insegnamenti o iscritti al corso di laurea.";
 
 $inputs = array(
   array(
