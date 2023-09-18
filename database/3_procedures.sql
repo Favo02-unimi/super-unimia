@@ -443,7 +443,7 @@ CREATE OR REPLACE PROCEDURE edit_appello (
       UPDATE appelli SET
         data = _data,
         ora = _ora,
-        luogo = _luogo
+        luogo = COALESCE(NULLIF(_luogo, ''), luogo)
       WHERE codice = _codice;
 
     END;
