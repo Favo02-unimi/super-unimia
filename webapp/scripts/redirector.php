@@ -15,6 +15,8 @@ if ((!isset($CUR_PAGE)) || $_SESSION["usertype"] != $CUR_PAGE) {
   switch ($_SESSION["usertype"]) {
   case "studente":
     Redirect("../studente/home.php");
+  case "ex_studente":
+    Redirect("../ex_studente/home.php");
   case "docente":
     Redirect("../docente/home.php");
   case "segretario":
