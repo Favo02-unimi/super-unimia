@@ -12,9 +12,9 @@ $create = array(
   "text"=>"Crea nuovo appello"
 );
 
-$table_headers = array("Insegnamento", "Data", "Ora", "Luogo", "Iscritti", array("colspan"=>"4", "text"=>"Controlli"));
+$table_headers = array("Insegnamento", "Data", "Ora", "Luogo", "Da valutare", array("colspan"=>"4", "text"=>"Controlli"));
 
-$qry = "SELECT __codice, __insegnamento, __nome_insegnamento, __data, __ora, __luogo, __iscritti FROM unimia.get_appelli_per_docente($1)";
+$qry = "SELECT __codice, __insegnamento, __nome_insegnamento, __data, __ora, __luogo, __da_valutare FROM unimia.get_appelli_per_docente($1)";
 $res = pg_prepare($con, "", $qry);
 $res = pg_execute($con, "", array($_SESSION["userid"]));
 
@@ -31,7 +31,7 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__data"]),
         array("type"=>"text", "val"=>$row["__ora"]),
         array("type"=>"text", "val"=>$row["__luogo"]),
-        array("type"=>"text", "val"=>$row["__iscritti"]),
+        array("type"=>"text", "val"=>$row["__da_valutare"]),
         array(
           "type"=>"button",
           "target"=>"gestione_iscrizioni.php?filter=".$row["__data"]."&highlight=false&hide=true",

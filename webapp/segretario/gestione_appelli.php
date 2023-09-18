@@ -7,9 +7,9 @@ $fa_icon = "fa-calendar-day";
 $title = "Gestione appelli";
 $subtitle = "";
 
-$table_headers = array("Corso di laurea", "Insegnamento", "Data", "Ora", "Luogo", "Docente", "Iscritti", array("colspan"=>"4", "text"=>"Controlli"));
+$table_headers = array("Corso di laurea", "Insegnamento", "Data", "Ora", "Luogo", "Docente", "Da valutare", array("colspan"=>"4", "text"=>"Controlli"));
 
-$qry = "SELECT __codice, __corso_di_laurea, __nome_corso_di_laurea, __insegnamento, __nome_insegnamento, __data, __ora, __luogo, __docente, __nome_docente, __iscritti FROM unimia.get_appelli()";
+$qry = "SELECT __codice, __corso_di_laurea, __nome_corso_di_laurea, __insegnamento, __nome_insegnamento, __data, __ora, __luogo, __docente, __nome_docente, __da_valutare FROM unimia.get_appelli()";
 $res = pg_prepare($con, "", $qry);
 $res = pg_execute($con, "", array());
 
@@ -28,7 +28,7 @@ while($row = pg_fetch_assoc($res)) {
         array("type"=>"text", "val"=>$row["__ora"]),
         array("type"=>"text", "val"=>$row["__luogo"]),
         array("type"=>"text", "val"=>$row["__nome_docente"]),
-        array("type"=>"text", "val"=>$row["__iscritti"]),
+        array("type"=>"text", "val"=>$row["__da_valutare"]),
         array(
           "type"=>"button",
           "target"=>"gestione_iscrizioni.php?filter=".$row["__data"]."&highlight=false&hide=true",
