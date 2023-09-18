@@ -82,6 +82,36 @@ CREATE OR REPLACE FUNCTION get_studente (
     END;
   $$;
 
+-- restituisce un ex studente dato il suo id
+CREATE OR REPLACE FUNCTION get_ex_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __id uuid,
+    __nome TEXT,
+    __cognome TEXT,
+    __email TEXT,
+    __matricola CHAR(6),
+    __corso_di_laurea VARCHAR(6),
+    __nome_corso_di_laurea TEXT,
+    __motivazione MOTIVAZIONE_ARCHIVIO
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT u.id, u.nome, u.cognome, u.email, s.matricola, s.corso_di_laurea, cdl.nome, s.motivazione
+        FROM archivio_studenti AS s
+        INNER JOIN utenti AS u ON u.id = s.id
+        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = s.corso_di_laurea
+        WHERE u.id = _id;
+
+    END;
+  $$;
+
 -- restituisce tutti i docenti disponibili
 CREATE OR REPLACE FUNCTION get_docenti ()
   RETURNS TABLE (
