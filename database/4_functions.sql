@@ -565,9 +565,8 @@ CREATE OR REPLACE FUNCTION get_esami_mancanti ()
                s.corso_di_laurea, cdl.nome,
                i.codice, i.nome, i.descrizione, i.anno,
                i.responsabile, CONCAT(doc.nome, ' ', doc.cognome), doc.email
-        ORDER BY stu.id, CONCAT(stu.nome, ' ', stu.cognome), s.matricola,
-               s.corso_di_laurea, cdl.nome,
-               i.codice, i.nome, i.descrizione, i.anno;
+        ORDER BY stu.cognome, stu.nome, s.matricola,
+               i.anno, i.codice;
 
     END;
   $$;
