@@ -367,6 +367,9 @@ CREATE OR REPLACE PROCEDURE edit_insegnamento (
       DELETE FROM propedeuticita AS p
       WHERE p.insegnamento = _codice;
 
+      DELETE FROM propedeuticita AS p
+      WHERE p.insegnamento = _new_codice;
+
       IF _propedeuiticita IS NOT NULL THEN
         FOREACH _propedeutico IN ARRAY _propedeuiticita LOOP
           INSERT INTO propedeuticita VALUES (COALESCE(NULLIF(_new_codice, ''), _codice), _propedeutico);
