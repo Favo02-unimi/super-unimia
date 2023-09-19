@@ -807,22 +807,17 @@ CREATE OR REPLACE FUNCTION get_esami_mancanti_per_studente (
   )
   LANGUAGE plpgsql
   AS $$
-    DECLARE _cdl VARCHAR(6);
     BEGIN
 
       SET search_path TO unimia;
 
-      SELECT s.corso_di_laurea INTO _cdl
-      FROM studenti AS s
-      WHERE s.id = _id;
-
       RETURN QUERY
-        SELECT i.codice, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(u.nome, ' ', u.cognome), u.email, string_agg(insegnamento_propedeutico, ', ')
-        FROM insegnamenti AS i
-        INNER JOIN docenti AS d ON d.id = i.responsabile
-        INNER JOIN utenti AS u ON d.id = u.id
+        SELECT i.codice,i.nome,i.descrizione,i.anno,i.responsabile,CONCAT(doc.nome, ' ', doc.cognome),doc.email,string_agg(insegnamento_propedeutico, ', ')
+        FROM studenti AS s
+        INNER JOIN insegnamenti AS i ON i.corso_di_laurea = s.corso_di_laurea
         LEFT JOIN propedeuticita AS p ON p.insegnamento = i.codice
-        WHERE i.corso_di_laurea = _cdl
+        INNER JOIN utenti AS doc ON doc.id = i.responsabile
+        WHERE s.id = _id
         AND NOT EXISTS (
           SELECT *
           FROM iscrizioni AS isc
@@ -841,7 +836,7 @@ CREATE OR REPLACE FUNCTION get_esami_mancanti_per_studente (
             AND Now() > a2.data
           )
         )
-        GROUP BY i.codice, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(u.nome, ' ', u.cognome), u.email
+        GROUP BY i.codice, i.nome, i.descrizione, i.anno, i.responsabile, CONCAT(doc.nome, ' ', doc.cognome), doc.email
         ORDER BY i.corso_di_laurea, i.anno, i.codice;
 
     END;
