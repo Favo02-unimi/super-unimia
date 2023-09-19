@@ -17,13 +17,22 @@ if (isset($_POST["submit"])) {
   }
 }
 
+
+$qry = "SELECT count(*) as rimanenti FROM unimia.get_esami_mancanti_per_studente($1);";
+$res = pg_prepare($con, "", $qry);
+$res = pg_execute($con, "", array($_POST["id"]));
+
+$row = pg_fetch_assoc($res);
+
 $CUR_PAGE = "segretario";
 $fa_icon = "fa-user-graduate";
 $title = "Elimina studente";
-$subtitle = "";
+$subtitle = $row["rimanenti"] == 0
+  ? "Lo studente verrà spostato nell'archivio con motivazione <b>\"Laurea\"</b> dato che ha superato tutti gli esami previsti dal corso di laurea."
+  : "Lo studente verrà spostato nell'archivio con motivazione <b>\"Rinuncia agli studi\"</b> dato che NON ha superato tutti gli esami previsti dal corso di laurea.";
 
 $class = "is-danger";
-$help = "";
+$help = $subtitle;
 
 $inputs = array(
   array(
