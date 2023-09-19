@@ -509,6 +509,69 @@ CREATE OR REPLACE FUNCTION get_ex_valutazioni ()
     END;
   $$;
 
+-- restituisce gli esami mancanti per la laurea di tutti gli studente
+CREATE OR REPLACE FUNCTION get_esami_mancanti ()
+  RETURNS TABLE (
+    __studente uuid,
+    __nome_studente TEXT,
+    __matricola CHAR(6),
+    __corso_di_laurea VARCHAR(6),
+    __nome_corso_di_laurea TEXT,
+    __codice VARCHAR(6),
+    __nome TEXT,
+    __descrizione TEXT,
+    __anno ANNO_INSEGNAMENTO,
+    __responsabile uuid,
+    __nome_responsabile TEXT,
+    __email_responsabile TEXT,
+    __propedeuticita TEXT
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT stu.id, CONCAT(stu.nome, ' ', stu.cognome), s.matricola,
+               s.corso_di_laurea, cdl.nome,
+               i.codice, i.nome, i.descrizione, i.anno,
+               i.responsabile, CONCAT(doc.nome, ' ', doc.cognome), doc.email,
+               string_agg(insegnamento_propedeutico, ', ')
+        FROM studenti AS s
+        INNER JOIN utenti AS stu ON stu.id = s.id
+        INNER JOIN corsi_di_laurea AS cdl ON cdl.codice = s.corso_di_laurea
+        INNER JOIN insegnamenti AS i ON i.corso_di_laurea = s.corso_di_laurea
+        LEFT JOIN propedeuticita AS p ON p.insegnamento = i.codice
+        INNER JOIN utenti AS doc ON doc.id = i.responsabile
+        WHERE NOT EXISTS (
+          SELECT *
+          FROM iscrizioni AS isc
+          INNER JOIN appelli AS a ON a.codice = isc.appello
+          WHERE a.insegnamento = i.codice
+          AND isc.voto IS NOT NULL
+          AND isc.voto >= 18
+          AND NOT EXISTS (
+            SELECT *
+            FROM iscrizioni AS isc2
+            INNER JOIN appelli AS a2 ON a2.codice = isc2.appello
+            WHERE a2.insegnamento = a.insegnamento
+            AND a2.data > a.data
+            AND Now() > a2.data
+          )
+
+        )
+        GROUP BY stu.id, CONCAT(stu.nome, ' ', stu.cognome), s.matricola,
+               s.corso_di_laurea, cdl.nome,
+               i.codice, i.nome, i.descrizione, i.anno,
+               i.responsabile, CONCAT(doc.nome, ' ', doc.cognome), doc.email
+        ORDER BY stu.id, CONCAT(stu.nome, ' ', stu.cognome), s.matricola,
+               s.corso_di_laurea, cdl.nome,
+               i.codice, i.nome, i.descrizione, i.anno;
+
+    END;
+  $$;
+
 -- restituisce tutti gli insegnamenti di cui un docente è responsabile
 CREATE OR REPLACE FUNCTION get_insegnamenti_per_docente (
   _id uuid
