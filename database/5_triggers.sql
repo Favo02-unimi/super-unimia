@@ -166,7 +166,7 @@ CREATE OR REPLACE TRIGGER controllo_propedeuticita_cicliche
   FOR EACH ROW
   EXECUTE PROCEDURE controllo_propedeuticita_cicliche_func();
 
--- controlla che non esistano più appelli dello corso di laurea dello stesso corso alla creazione di un appello
+-- controlla che non esistano più appelli dello corso di laurea nella stessa giornata
 CREATE OR REPLACE FUNCTION controllo_appelli_per_anno_func()
   RETURNS TRIGGER
   LANGUAGE plpgsql

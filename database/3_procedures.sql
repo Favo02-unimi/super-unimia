@@ -54,8 +54,7 @@ CREATE OR REPLACE PROCEDURE edit_studente (
     END;
   $$;
 
--- elimina uno studente dato il suo id
--- l'utente non viene cancellato in caso siano presenti foreing key
+-- elimina uno studente dato il suo id (spostandolo nell'archivio grazie al trigger)
 CREATE OR REPLACE PROCEDURE delete_studente (
   _id uuid
 )

@@ -163,7 +163,7 @@ CREATE OR REPLACE FUNCTION get_docenti ()
     END;
   $$;
 
--- restituisce un doceente dato il suo id
+-- restituisce un docente dato il suo id
 CREATE OR REPLACE FUNCTION get_docente (
   _id uuid
 )
@@ -509,7 +509,7 @@ CREATE OR REPLACE FUNCTION get_ex_valutazioni ()
     END;
   $$;
 
--- restituisce gli esami mancanti per la laurea di tutti gli studente
+-- restituisce gli esami mancanti per la laurea di tutti gli studenti
 CREATE OR REPLACE FUNCTION get_esami_mancanti ()
   RETURNS TABLE (
     __studente uuid,
@@ -765,6 +765,39 @@ CREATE OR REPLACE FUNCTION get_appelli_per_studente (
     END;
   $$;
 
+-- restituisce la media delle valutazioni attive di uno studente
+CREATE OR REPLACE FUNCTION get_media_per_studente (
+  _id uuid
+)
+  RETURNS TABLE (
+    __media NUMERIC
+  )
+  LANGUAGE plpgsql
+  AS $$
+    BEGIN
+
+      SET search_path TO unimia;
+
+      RETURN QUERY
+        SELECT avg(voto)
+        FROM iscrizioni AS isc
+        INNER JOIN appelli AS a ON a.codice = isc.appello
+        WHERE studente = _id
+        AND voto IS NOT NULL
+        AND voto >= 18
+        AND NOT EXISTS (
+          SELECT *
+          FROM iscrizioni AS isc2
+          INNER JOIN appelli AS a2 ON a2.codice = isc2.appello
+          WHERE isc2.studente = _id
+          AND a2.insegnamento = a.insegnamento
+          AND a2.data > a.data
+          AND Now() > a2.data
+        );
+
+    END;
+  $$;
+
 -- restituisce tutte le valutazioni date ad uno studente
 CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
   _id uuid
@@ -816,39 +849,6 @@ CREATE OR REPLACE FUNCTION get_valutazioni_per_studente (
         WHERE isc.studente = _id
         AND Now() > a.data
         ORDER BY i.codice, a.data;
-
-    END;
-  $$;
-
--- restituisce la media delle valutazioni attive di uno studente
-CREATE OR REPLACE FUNCTION get_media_per_studente (
-  _id uuid
-)
-  RETURNS TABLE (
-    __media NUMERIC
-  )
-  LANGUAGE plpgsql
-  AS $$
-    BEGIN
-
-      SET search_path TO unimia;
-
-      RETURN QUERY
-        SELECT avg(voto)
-        FROM iscrizioni AS isc
-        INNER JOIN appelli AS a ON a.codice = isc.appello
-        WHERE studente = _id
-        AND voto IS NOT NULL
-        AND voto >= 18
-        AND NOT EXISTS (
-          SELECT *
-          FROM iscrizioni AS isc2
-          INNER JOIN appelli AS a2 ON a2.codice = isc2.appello
-          WHERE isc2.studente = _id
-          AND a2.insegnamento = a.insegnamento
-          AND a2.data > a.data
-          AND Now() > a2.data
-        );
 
     END;
   $$;
