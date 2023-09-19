@@ -72,6 +72,16 @@ require("filter.php");
       </tr>
     </thead>
 
+    <?php if (count($rows) == 0): ?>
+      <tfoot>
+        <tr>
+          <td colspan="100" class="has-text-centered invalid">
+            <strong>Nessun risultato trovato</strong>
+          </td>
+        </tr>
+      </tfoot>
+    <?php endif ?>
+
     <tbody>
       <?php foreach($rows as $row): ?>
 
