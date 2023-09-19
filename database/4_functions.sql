@@ -495,7 +495,7 @@ CREATE OR REPLACE FUNCTION get_ex_valutazioni ()
             END
           ) as valida,
           (
-            SELECT gmps.__media FROM get_media_per_studente(isc.studente) AS gmps
+            SELECT gmps.__media FROM get_media_per_ex_studente(isc.studente) AS gmps
           ) AS media
         FROM archivio_iscrizioni AS isc
         INNER JOIN appelli AS a ON a.codice = isc.appello
