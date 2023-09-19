@@ -85,6 +85,11 @@ require("../components/navbar.php");
       <strong>Gestione valutazioni e Carriere ex studenti</strong>
     </a>
 
+    <a href="esami_mancanti.php" class="block button is-link is-outlined is-fullwidth">
+      <span class="icon is-small"><i class="fa-solid fa-list-check fa-xl"></i></span>
+      <strong>Esami mancanti</strong>
+    </a>
+
   </div>
 
 <?php require("../components/footer.php"); ?>
