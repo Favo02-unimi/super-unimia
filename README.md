@@ -44,9 +44,9 @@ Each commit message consists of a **header**, a **body**, and a **footer**.
   │       │             │
   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
   │       │
-  │       └─⫸ Commit Scope: segretario|docente|studente|*
+  │       └─⫸ Commit Scope: segretario|docente|studente|tables|procedures|functions|triggers|dump|scripts|css
   │
-  └─⫸ Commit project part: repo|db|web
+  └─⫸ Commit project part: repo|docs|db|web
 ```
 
 ##### Project part
@@ -54,6 +54,7 @@ Each commit message consists of a **header**, a **body**, and a **footer**.
 Must be one of the following:
 
 * **repo**: changes to the repository (ci, readme, gitignore, ...)
+* **docs**: changes to documentation
 * **db**: database
 * **web**: webapp
 
@@ -61,9 +62,16 @@ Must be one of the following:
 
 The scope is the part of the codebase where the changes happened and it can be one of the following:
 
-* **segretario**: segretario user
-* **docente**: docente user
-* **studente**: studente user
+* **segretario**: webapp segretario user pages
+* **docente**: webapp docente user pages
+* **studente**: webapp studente user pages
+* **tables**: database tables
+* **procedures**: database procedures
+* **functions**: database functions
+* **triggers**: database triggers
+* **dump**: database dump
+* **scripts**: webapp scripts
+* **css**: webapp css
 
 - If a commit changes multiple parts of the codebase then an `*` sign can be used as the scope specifier.
 
