@@ -34,5 +34,9 @@ In alternativa è possibile avviare il webserver integrato di PHP eseguendo i co
   - `php -S localhost:8000`
   - recarsi all'indirizzo `localhost:8000`
   - _Come ricordato dalla [documentazione ufficiale](https://www.php.net/manual/en/features.commandline.webserver.php) di PHP, questo webserver è inteso come webserver di test e di sviluppo, non è consigliato da utilizzare in ambienti di production_
-
-
+- **Accedere all'applicativo web:** non esiste un meccanismo di registrazione, quindi il primo utente segretario deve essere creato dal database
+  - creazione utente attraverso la procedura `new_segretario`
+    - CALL `unimia.new_segretario('Nome', 'Cognome', 'Password');`
+  - in caso di import del dump `data-only` sarà presente l'utente con le seguenti credenziali _(presente anche nella versione online)_:
+    - email: `seg.retario@segretario.superuni.it`
+    - password: `8Caratteri!` _(uguale a tutti gli utenti)_
