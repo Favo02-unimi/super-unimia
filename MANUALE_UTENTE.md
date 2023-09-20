@@ -11,22 +11,21 @@ Ogni **modifica** _pushata_ al [repository GitHub](https://github.com/Favo02/sup
 - WebServer _(è possibile utilizzare anche il webserver integrato di PHP)_, per il deploy disponibile online è utilizzato `nginx`
 - Postgres server _(preferibile versione `15+`)_
 
+_Il software è stato sviluppato e testato su ambiente **Linux**. I comandi indicati sono per ambiente Linux._
+
 ### Installazione
 
-- **Creazione e popolazione database:** connettersi al server Postgres ed eseguire i seguenti script SQL, nel seguente ordine:
-  - `database/1_setup.sql`: creazione dello schema e dei tipi di dato personalizzati
-  - `database/2_tables.sql`: creazione tabelle
-  - `database/3_procedures.sql`: creazione procedure
-  - `database/4_functions.sql`: creazione funzioni
-  - `database/5_triggers.sql`: creazione trigger
-  - `database/6_population.sql`: popolazione del database _(da non eseguire in caso si voglia un database vuoto)_
-  - il database sarà creato con nome dello schema `unimia`
+- **Creazione e popolazione database:** il dump del database è fornito come due script SQL, uno che crea solo lo schema (`dump-schema-only.sql`), uno che inserisce solo i dati (`dump-data-only.sql`). \
+Il database può essere creato e popolato utilizzando lo script `restore.sh`, _(oppure utilizzando i comandi in esso riportati)_.
+  - `cd database/dump/`
+  - inserire i parametri corretti del proprio server postgres nel file `restore.sh`
+  - `sh restore.sh` _(importerà sia lo schema che i dati)_
 - **Creazione connessione al database:** è necessario stabile una connessione tra l'applicativo PHP e il database Postgres, attraverso la creazione del file `webapp/scripts/connection.php` _(omesso dal repository per ovvie ragioni di sicurezza)_
   - creare il file `webapp/scripts/connection.php`
   - scrivere nel file, sostituendo le parti tra parentesi graffe con le informazioni del proprio server postgres _(senza parentesi)_:
     ```php
     <?php
-    $con = pg_connect("host={postgres.favo02.dev} port={5432} dbname={unimia} user={user} password={password}");
+    $con = pg_connect("host={localhost} port={5432} dbname={unimia} user={postgres} password={password}");
     ?>
     ```
 - **Avviare l'applicativo PHP:** spostare tutto il contenuto della cartella `webapp` all'interno della cartella servita dal server web scelto.\
