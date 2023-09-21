@@ -11,7 +11,7 @@ Realizzata da Luca Favini (matricola 987617).
 - [Database](#database)
   - [Schema ER](#schema-er)
   - [Schema Logico](#schema-logico)
-- Scelte implementative significative
+- [Scelte implementative significative](#scelte-implementative-significative)
   - [Ristrutturazione database](#ristrutturazione-database)
   - [Campo identificativo utenti: uuid](#campo-identificativo-utenti-uuid)
   - [Hashing delle password: estensione `pgcrypto`](#hashing-delle-password-estensione-pgcrypto)
@@ -25,10 +25,10 @@ Realizzata da Luca Favini (matricola 987617).
   - [Meccanismo di login e controllo permessi](#meccanismo-di-login-e-controllo-permessi)
   - [Generazione AJAX insegnamenti per propedeuticità](#generazione-ajax-insegnamenti-per-propedeuticità)
   - [Componente filtro tabelle](#componente-filtro-tabelle)
-- Descrizione funzioni realizzate
-  - Procedure
-  - Funzioni
-  - Trigger
+- [Descrizione funzioni realizzate](#descrizione-funzioni-realizzate)
+  - [Procedure](#procedure)
+  - [Funzioni](#funzioni)
+  - [Trigger](#trigger)
 
 ## Testing e Deploy
 
@@ -73,6 +73,20 @@ _La parte a bassa opacità della schema ER rappresenta l'archivio._
 Lo schema logico è disponibile come immagine al link: [Schema logico](https://github.com/Favo02-unimi/super-unimia/tree/main/docs/Logic_schema.png).
 
 ## Scelte implementative significative
+
+- [Ristrutturazione database](#ristrutturazione-database)
+- [Campo identificativo utenti: uuid](#campo-identificativo-utenti-uuid)
+- [Hashing delle password: estensione `pgcrypto`](#hashing-delle-password-estensione-pgcrypto)
+- [Generazione email utente e matricola studente](#generazione-email-utente-e-matricola-studente)
+- [(Non) aggiornamento: COALESCE](#non-aggiornamento-coalesce)
+- [Propedeuticità cicliche: trigger di controllo ricorsivo](#propedeuticità-cicliche-trigger-di-controllo-ricorsivo)
+- [Carriera valida](#carriera-valida)
+- [Archivio: laurea e rinuncia agli studi](#archivio-laurea-e-rinuncia-agli-studi)
+- [Componenti PHP](#componenti-php)
+- [Funzionamento componenti PHP](#funzionamento-componenti-php)
+- [Meccanismo di login e controllo permessi](#meccanismo-di-login-e-controllo-permessi)
+- [Generazione AJAX insegnamenti per propedeuticità](#generazione-ajax-insegnamenti-per-propedeuticità)
+- [Componente filtro tabelle](#componente-filtro-tabelle)
 
 ### Ristrutturazione database
 
@@ -455,30 +469,70 @@ function filterTable() {
 }
 ```
 
+## Descrizione funzioni realizzate
 
+- [Procedure](#procedure)
+- [Funzioni](#funzioni)
+- [Trigger](#trigger)
 
+### Procedure
 
+- `new_studente`: Crea un nuovo studente dato nome, cognome e password
+- `edit_studente`: Modifica uno studente dato il suo id (non vengono aggiornati i campi lasciati a NULL)
+- `delete_studente`: Elimina uno studente dato il suo id (spostandolo nell'archivio grazie al trigger)
+- `new_docente`: Crea un nuovo docente dato nome, cognome e password
+- `edit_docente`: Modifica un docente dato il suo id (non vengono aggiornati i campi lasciati a NULL)
+- `delete_docente`: Elimina un docente dato il suo id (l'utente non viene cancellato in caso siano presenti foreing key)
+- `edit_user_password`: Modifica la password di un utente (data solo la mail, senza controlli, quindi per un admin)
+- `edit_password`: Modifica la password di un utente (dato l'id e la vecchia password, quindi per utenti semplici)
+- `new_corso_di_laurea`: Crea un nuovo corso di laurea
+- `edit_corso_di_laurea`: Modifica un corso di laurea dato il suo codice (non vengono aggiornati i campi lasciati a NULL)
+- `delete_corso_di_laurea`: Elimina un corso di laurea dato il suo codice (il cdl non viene cancellato in caso siano presenti foreing key)
+- `new_insegnamento`: Crea un nuovo insegnamento
+- `edit_insegnamento`: Modifica un insegnamento dato il suo codice (non vengono aggiornati i campi lasciati a NULL)
+- `delete_insegnamento`: Elimina un insegnamento dato il suo codice (l'insegnamento non viene cancellato in caso siano presenti foreing key)
+- `new_appello`: Crea un appello
+- `edit_appello`: Modifica un appello dato il suo codice
+- `delete_appello`: Elimina un appello dato il suo codice (l'appello non viene cancellato in caso siano presenti foreing key)
+- `iscriviti_appello`: Iscrive uno studente ad un appello
+- `disiscriviti_appello`: Disiscrive uno studente ad un appello
+- `valuta_iscrizione`: Valuta uno studente iscritto ad un appello
 
+### Funzioni
 
+- `login`: Verifica il login di un utente in base a email e password
+- `get_studenti`: Restituisce tutti gli studenti disponibili
+- `get_ex_studenti`: Restituisce tutti gli ex studenti disponibili
+- `get_studente`: Restituisce uno studente in base al suo ID
+- `get_ex_studente`: Restituisce un ex studente in base al suo ID
+- `get_docenti`: Restituisce tutti i professori (docenti) disponibili
+- `get_docente`: Restituisce un professore (docente) in base al suo ID
+- `get_segretari`: Restituisce tutte le segretarie (segretari) disponibili
+- `get_segretario`: Restituisce una segretaria (segretario) in base al suo ID
+- `get_corsi_di_laurea`: Restituisce tutti i corsi di laurea disponibili
+- `get_insegnamenti`: Restituisce tutti gli insegnamenti disponibili
+- `get_insegnamenti_per_corso_di_laurea`: Restituisce tutti gli insegnamenti per un corso di laurea specifico
+- `get_appelli`: Restituisce tutte le sessioni d'esame (appelli) disponibili
+- `get_iscrizioni`: Restituisce tutte le iscrizioni disponibili
+- `get_valutazioni`: Restituisce tutte le valutazioni e i registri accademici
+- `get_ex_valutazioni`: Restituisce tutte le valutazioni e i registri accademici per gli ex studenti
+- `get_esami_mancanti`: Restituisce gli esami mancanti per tutti gli studenti
+- `get_insegnamenti_per_docente`: Restituisce tutti gli insegnamenti per i quali un professore è responsabile
+- `get_appelli_per_docente`: Restituisce tutte le sessioni d'esame per le quali un professore è responsabile
+- `get_iscrizioni_per_docente`: Restituisce tutte le iscrizioni per le quali un professore è responsabile
+- `get_valutazioni_per_docente`: Restituisce tutte le valutazioni date da un professore
+- `get_appelli_per_studente`: Restituisce tutte le sessioni d'esame per il corso di studio di uno studente
+- `get_media_per_studente`: Restituisce la media delle valutazioni attive per uno studente
+- `get_valutazioni_per_studente`: Restituisce tutte le valutazioni per uno studente
+- `get_esami_mancanti_per_studente`: Restituisce gli esami mancanti per uno studente
 
+### Trigger
 
-
-
-Fatte:
-
-- Generalizzazione a figli
-- uuid
-- password hash
-- generazione email
-- COLAESCE per non modificare i campi lasciati vuoti
-- trigger con funzione ricorsiva per propedeuticita
-- funzione per voto valido o meno
-- trigger eliminazione studente come capisce laurea o rinuncia
-- Componenti PHP
-- Funzionamento componenti PHP
-- Meccanismo di login
-- filter
-
-Da fare:
-
-- ajax per propedeuticita in gestione insegnamento
+- `genera_mail`: Genera la mail dell'utente basandosi su nome, cognome, tipo e omonimi
+- `genera_matricola`: Genera la matricola dello studente (controllando eventuali duplicati)
+- `controllo_anno_insegnamento`: Controlla, alla creazione di un nuovo insegnamento, che l'anno sia compatibile con il tipo di laurea
+- `controllo_numero_insegnamenti_per_docente`: Controlla, alla creazione o aggiornamento di un nuovo insegnamento, che il docente responsabile non abbia già 3 insegnamenti
+- `controllo_propedeuticita_cicliche`: Controlla che le propedeuticità non siano cicliche durante la creazione o l'aggiornamento delle propedeuticità per un insegnamento
+- `controllo_appelli_per_anno`: Controlla che non esistano più appelli dello stesso corso di laurea nella stessa giornata
+- `controllo_propedeuticita_iscrizione`: Controlla che le propedeuticità siano rispettate quando uno studente si iscrive a un appello
+- `archivia_studente`: Sposta uno studente e le sue iscrizioni nell'archivio alla cancellazione, con una motivazione di "Rinuncia agli studi" o "Laurea"
