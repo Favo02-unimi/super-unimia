@@ -1,3 +1,5 @@
 test.sql
 connection*.php
 .idea
+header.tex
+*.pdf
