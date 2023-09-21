@@ -12,6 +12,19 @@ Realizzata da Luca Favini (matricola 987617).
   - [Schema ER](#schema-er)
   - [Schema Logico](#schema-logico)
 - Scelte implementative significative
+  - [Ristrutturazione database](#ristrutturazione-database)
+  - [Campo identificativo utenti: uuid](#campo-identificativo-utenti-uuid)
+  - [Hashing delle password: estensione `pgcrypto`](#hashing-delle-password-estensione-pgcrypto)
+  - [Generazione email utente e matricola studente](#generazione-email-utente-e-matricola-studente)
+  - [(Non) aggiornamento: COALESCE](#non-aggiornamento-coalesce)
+  - [Propedeuticità cicliche: trigger di controllo ricorsivo](#propedeuticità-cicliche-trigger-di-controllo-ricorsivo)
+  - [Carriera valida](#carriera-valida)
+  - [Archivio: laurea e rinuncia agli studi](#archivio-laurea-e-rinuncia-agli-studi)
+  - [Componenti PHP](#componenti-php)
+  - [Funzionamento componenti PHP](#funzionamento-componenti-php)
+  - [Meccanismo di login e controllo permessi](#meccanismo-di-login-e-controllo-permessi)
+  - [Generazione AJAX insegnamenti per propedeuticità](#generazione-ajax-insegnamenti-per-propedeuticità)
+  - [Componente filtro tabelle](#componente-filtro-tabelle)
 - Descrizione funzioni realizzate
   - Procedure
   - Funzioni
@@ -318,7 +331,6 @@ GROUP BY i.codice, i.nome, i.descrizione, i.anno,
   i.responsabile, CONCAT(doc.nome, ' ', doc.cognome), doc.email
 ORDER BY i.corso_di_laurea, i.anno, i.codice;
 ```
-
 
 ### Componenti PHP
 
