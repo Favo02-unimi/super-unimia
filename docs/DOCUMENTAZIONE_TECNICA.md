@@ -414,12 +414,14 @@ Per risolvere questo piccolo problema **senza** aggiungere pagine intermedie con
 
 ```js
 function generaInsegnamenti(cdl) {
-  document.querySelector("select[name='propedeuticita[]']").innerHTML = "<option>Loading...</option>";
+  document.querySelector("select[name='propedeuticita[]']").innerHTML
+    = "<option>Loading...</option>";
 
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.querySelector("select[name='propedeuticita[]']").innerHTML = this.responseText;
+      document.querySelector("select[name='propedeuticita[]']").innerHTML
+        = this.responseText;
     }
   };
   xmlhttp.open("GET", `ajax_insegnamenti.php?cdl=${cdl}`, true);
