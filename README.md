@@ -8,8 +8,8 @@ Deployed (automatically) at [superunimia.favo02.dev](superunimia.favo02.dev).
 
 _In italian:_
 
-- [Manuale utente](MANUALE_UTENTE.md) (installation manual)
-- [Documentazione tecnica](DOCUMENTAZIONE_TECNICA.md) (technical documentation)
+- [Manuale utente](docs/MANUALE_UTENTE.md) (installation manual)
+- [Documentazione tecnica](docs/DOCUMENTAZIONE_TECNICA.md) (technical documentation)
 
 ## Workflow
 
