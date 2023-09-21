@@ -25,7 +25,8 @@ Il database può essere creato e popolato utilizzando lo script `restore.sh`, _(
   - scrivere nel file, sostituendo le parti tra parentesi graffe con le informazioni del proprio server postgres _(senza parentesi)_:
     ```php
     <?php
-    $con = pg_connect("host={localhost} port={5432} dbname={unimia} user={postgres} password={password}");
+    $con = pg_connect("host={localhost} port={5432} dbname={unimia}
+                       user={postgres} password={password}");
     ?>
     ```
 - **Avviare l'applicativo PHP:** spostare tutto il contenuto della cartella `webapp` all'interno della cartella servita dal server web scelto.\
