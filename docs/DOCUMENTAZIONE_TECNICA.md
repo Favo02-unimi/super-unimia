@@ -38,7 +38,7 @@ Ogni cartella alla root del progetto include una parte indipendente del progetto
 
 - `database`: script sql per la creazione e popolazione del **database**
 - `webapp`: cartella contentente tutti i file PHP per la realizzazione della **webapp**
-  - `components`: **componenti** _(molto grezzi)_ riutilizzabili tra varie pagine PHP. Utilizzabili semplicemente dichiarando delle variabili ed includendo il componente
+  - `components`: **componenti** _(molto grezzi)_ riutilizzabili tra varie pagine PHP
   - `docente`: pagine accessibili dagli utenti di tipo **docente**
   - `scripts`: vari script di utilità _(login, controllo autorizzazioni, connessione al database, ...)_
   - `segretario`: pagine accessibili dagli utenti di tipo **segretario**
@@ -66,7 +66,7 @@ Lo schema logico è disponibile come immagine al link: [Schema logico](https://g
 Lo schema ER presenta una gerarchia tra l'**entità padre** utente e le **entità figlie** segretario, docente e studente.\
 Ho deciso di ristrutturare questa gerarchia aggiungendo delle **relazioni** tra utente e i figli, in modo da mantenere delle **informazioni comuni** dentro la tabella padre ma poter aggiungere delle **informazioni aggiuntive** dentro le tabelle figlie (segretari, docenti, studenti, archivio studenti).
 
-```{.mermaid width=250}
+```mermaid
 stateDiagram-v2
 direction BT
     Utente
@@ -88,7 +88,7 @@ Ma basta espandere un minimo gli orizzonti e si potrebbe affidare al docente un 
 
 _Credo, quindi, che questa sia la migliore soluzione: tutti gli **utenti in comune**, ma poi **raggruppati in sottoinsiemi** in base al tipo, anche a costo di tabelle con solo chiave esterna._
 
-```{.mermaid width=250}
+```mermaid
 classDiagram
 direction BT
 class docenti {
@@ -124,7 +124,7 @@ Sebbene risalire ad un id non dovrebbe di per sè essere un rischio per la sicur
 
 ### Hashing delle password: estensione `pgcrypto`
 
-Le password degli utenti non sono _ovviamente_ salvate in chiaro, ma vengono "**hashate**" e "**saltate**" all'inserimento, attraverso l'utilizzo della funzione `crypt` dell'estensione di postgres `pgcrypto`.
+Le password degli utenti non sono _ovviamente_ salvate in chiaro, ma vengono "**hashate**" e "**saltate**" all'inserimento, attraverso l'utilizzo della funzione `crypt` dell'estensione di postgres `pgcrypto`. Questa estensione implementa funzioni aggiornate allo stato dell'arte, che non utilizzando algoritmi non sicuri come SHA-1 o MD-5.
 
 ```sql
 INSERT INTO utenti(password, nome, cognome, tipo)
@@ -133,7 +133,7 @@ VALUES (crypt(_password, gen_salt('bf')), INITCAP(_nome), INITCAP(_cognome), 'st
 
 ### Generazione email utente e matricola studente
 
-La mail di un utente non viene inserita "a mano" alla creazione, ma viene **generata automaticamente** attraverso un **trigger** all'inserimento di un nuovo utente, basandosi sul suo nome, cognome e tipo. Vengono inoltre considerati eventuali omonimi, aggiungendo un numero per evitare duplicazioni.
+La mail di un utente non viene inserita "a mano" alla creazione, ma viene **generata automaticamente** attraverso un **trigger** all'inserimento di un nuovo utente, basandosi sul suo nome, cognome e tipo. Vengono inoltre considerati eventuali **omonimi**, aggiungendo un numero per evitare duplicazioni.
 
 ```sql
 SELECT count(*) INTO _num
@@ -216,7 +216,7 @@ END IF;
 ### Carriera valida
 
 Ogni valutazione di uno studente è **valida** solo se è **sufficiente** (>= 18) e non sono presenti iscrizioni ad **appelli più recenti**. Verificare se una valutazione è valida è necessario per produrre la **carriera valida** (e la media).\
-Questo risultato è ottenuto prima di tutto controllando che il voto sia presente e che sia sufficiente e poi che non esistano iscrizioni ad appelli diversi con data maggiore (più recente) rispetto alla valutazione da controllare.
+Questo risultato è ottenuto prima di tutto controllando che il voto sia presente e che sia sufficiente e poi che non esistano iscrizioni ad appelli diversi con data maggiore (più recente) rispetto alla valutazione da controllare _(subquery)_.
 
 ```sql
 SELECT isc.appello, a.insegnamento, i.nome, a.data,
@@ -256,6 +256,8 @@ Quando uno studente viene eliminato, le sue informazioni vengono **spostare nell
 
 La motivazione assume il valore _"Laurea"_ in caso lo studente abbia superato **tutti gli esami**, ovvero esiste una valutazione **attiva** per ogni esame del suo corso di laurea, assume valore _"Rinuncia agli studi"_ altrimenti.
 
+Una volta stabilita la motivazione il trigger procedere a spostare lo **studente** e le sue **valutazioni** nell'archivio.
+
 ```sql
 SELECT count(*) INTO _esami_mancanti
 FROM get_esami_mancanti_per_studente(OLD.id);
@@ -281,7 +283,7 @@ UPDATE utenti SET tipo = 'ex_studente' WHERE id = OLD.id;
 RETURN OLD;
 ```
 
-Il trigger si serve della funzione `esami_mancanti` che non fa restituire gli esami del corso di laurea dello studente che non presentano una valutazione attiva.
+Il trigger si serve della funzione `esami_mancanti`, la quale non fa altro che restituire gli esami del corso di laurea dello studente che **non presentano** una valutazione attiva.
 
 ```sql
 SELECT i.codice, i.nome, i.descrizione, i.anno,
@@ -332,7 +334,7 @@ $subtitle = "Appelli degli insegnamenti del tuo corso di laurea.";
 require("../components/table.php");
 ```
 
-Grazie a questo semplice meccanismo il numero di codice ripetuto è molto limitato, lo sviluppo di nuove pagine è semplificato e lo stile è uniforme.
+Grazie a questo semplice meccanismo il numero di **codice ripetuto** è molto **limitato**, lo **sviluppo** di nuove pagine è **semplificato** e lo **stile** è **uniforme**.
 
 ### Funzionamento componenti PHP
 
@@ -343,13 +345,13 @@ Il componente scorre tutte le righe e ne visualizza il contentuo per ciascuna.
 <?php foreach($rows as $row): ?> // per ogni riga
   <tr class="<?= $row["class"] ?>"> // crea table row (tr)
     <?php foreach($row["cols"] as $td): ?> // scorre tutte le celle della riga
-      <td><?= $td["val"] ?></td> // inserisci cella: table data (td) 
+      <td><?= $td["val"] ?></td> // inserisce cella: table data (td) 
     <?php endforeach ?>
   </tr>
 <?php endforeach ?>
 ```
 
-Il componente tabella deve anche essere in grado di generare celle che siano dei pulsanti (ad esempio i tasti modifica, elimina), all'interno di una riga.\
+Il componente tabella deve anche essere in grado di generare celle che siano dei pulsanti (ad esempio i tasti modifica ed elimina), all'interno di una riga.\
 Per questo motivo il componente controlla il campo **tipo del dato ricevuto**, in modo da generare del codice **HTML diverso** in base allo scopo della cella.
 
 ```php
@@ -394,14 +396,30 @@ Queste variabili di sessione vengono impostate dalla **pagina login**, che effet
 
 ### Generazione AJAX insegnamenti per propedeuticità
 
+È possibile modificare le **propedeuticità** nelle pagine di **creazione e modifica** di un insegnamento. Questo porta con sè un problema: devono venir visualizzati solo gli insegnamenti dello **stesso corso di laurea** dell'insegnamento stesso. Ma è possibile modificare il corso di laurea nella stessa pagina, necessitando un **aggiornamento asincrono**.
 
+Per risolvere questo piccolo problema **senza** aggiungere pagine intermedie confusionarie ho implementato una semplice **richiesta AJAX**, che aggiorna gli insegnamenti disponibili ad essere aggiunti alle propedeuticità ogni volta che viene **cambiato** il corso di laurea.
 
+```js
+function generaInsegnamenti(cdl) {
+  document.querySelector("select[name='propedeuticita[]']").innerHTML = "<option>Loading...</option>";
+
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.querySelector("select[name='propedeuticita[]']").innerHTML = this.responseText;
+    }
+  };
+  xmlhttp.open("GET", `ajax_insegnamenti.php?cdl=${cdl}`, true);
+  xmlhttp.send();
+}
+```
 
 ### Componente filtro tabelle
 
 Tutte le pagine che contengono una tabella hanno anche a disposizione un **filtro**, che permette appunto di filtrare e/o evidenziare i risultati della tabella in base ad un **parametro di ricerca**.
 
-Il parametro di ricerca è salvato come **parametro GET** della pagina, questo permette di creare dei **link che attivano il filtraggio** della pagina. Questo meccanismo è spesso utilizzato per mostrare solo i dati relativi ad un pulsante di reindirizzamento che è stato premuto, risparmiando pagine più dettagliate ma semplicemente filtrando quella generica.\
+Il parametro di ricerca è salvato come **parametro GET** della pagina, questo permette di creare dei **link che attivano il filtraggio** della pagina. Questo meccanismo è spesso utilizzato per mostrare solo i dati relativi ad un **pulsante di reindirizzamento** che è stato premuto, risparmiando la creazione pagine più dettagliate ma semplicemente **filtrando quella generica**.\
 La funzione di ricerca è scritta in JavaScript ed è solamente **lato frontend**.
 
 ```js
@@ -445,8 +463,8 @@ Fatte:
 - Componenti PHP
 - Funzionamento componenti PHP
 - Meccanismo di login
-- ajax per propedeuticita in gestione insegnamento
 - filter
 
 Da fare:
 
+- ajax per propedeuticita in gestione insegnamento
