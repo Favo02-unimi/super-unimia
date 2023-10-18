@@ -2,7 +2,7 @@
 
 "Basi di dati" final exam assignment.
 
-Deployed (automatically) at [superunimia.favo02.dev](superunimia.favo02.dev).
+Deployed (automatically) at [superunimia.favo02.dev](https://superunimia.favo02.dev).
 
 ## Documentazione
 
